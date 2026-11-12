@@ -26,12 +26,12 @@
 | 2 | Dataset schema analysis & field mapping | Core Researcher | Pending | 0% | 1 day | inspect all JSONL splits |
 | 3 | Evidence adapter (ingest + normalize) | Data Engineer | Pending | 0% | 2 days | read JSONL, immutable IDs, timestamps |
 | 4 | Case construction & evidence index | Data Engineer | Pending | 0% | 2 days | group by relay + window |
-| 5 | Congestion specialist agent | AI Agent Dev | Pending | 0% | 2 days | queue, drops, offered load, delay |
-| 6 | Wireless/mobility specialist agent | AI Agent Dev | Pending | 0% | 2 days | RSSI, link, retransmissions, route changes |
-| 7 | Forwarding-pattern specialist agent | AI Agent Dev | Pending | 0% | 2 days | received/forwarded, loss sequences |
-| 8 | Evidence validator | AI Agent Dev | Pending | 0% | 2 days | ID existence, case membership, numeric claims |
-| 9 | Coordinator & decision rules | Core Developer | Pending | 0% | 3 days | benign/malicious/insufficient evidence rules |
-| 10 | Bounded challenge round | Core Developer | Pending | 0% | 2 days | conflict resolution, one revision round |
+| 5 | Congestion specialist agent | AI Agent Dev | Done | 100% | 2 days | queue, drops, offered load, delay |
+| 6 | Wireless/mobility specialist agent | AI Agent Dev | Done | 100% | 2 days | RSSI, link, retransmissions, route changes |
+| 7 | Forwarding-pattern specialist agent | AI Agent Dev | Done | 100% | 2 days | received/forwarded, loss sequences |
+| 8 | Evidence validator | AI Agent Dev | Done | 100% | 2 days | ID existence, case membership, numeric claims |
+| 9 | Coordinator & decision rules | Core Developer | Done | 100% | 3 days | benign/malicious/insufficient evidence rules |
+| 10 | Bounded challenge round | Core Developer | Done | 100% | 2 days | conflict resolution, one revision round |
 | 11 | Baselines (loss-only threshold, single agent) | Core Researcher | Pending | 0% | 2 days | comparison baselines |
 | 12 | Evaluation framework & metrics | Core Researcher | Pending | 0% | 2 days | false accusation rate, detection rate, coverage, F1 |
 | 13 | Ablation & evidence-masking tests | Core Researcher | Pending | 0% | 2 days | remove challenge, remove abstention, hide fields |
@@ -42,16 +42,16 @@
 ## Completion Summary
 
 - **Total planned effort**: ~30 person-days
-- **Work completed**: Task 15 (10% of its own weight)
-- **Overall project completion**: ~2%
-- **Work remaining**: 98%
+- **Work completed**: Tasks 5–10 (agent pipeline + coordinator) + Task 15 docs files created
+- **Overall project completion**: ~42%
+- **Work remaining**: ~58%
 
 ### Percentage by Phase
 
 | Phase | Tasks | Weight | Complete |
 |-------|-------|--------|----------|
 | Setup & Data | 1–4 | ~20% | 0% |
-| Agent Pipeline | 5–10 | ~40% | 0% |
+| Agent Pipeline | 5–10 | ~40% | 100% |
 | Evaluation | 11–13 | ~20% | 0% |
 | Demo & Docs | 14–15 | ~15% | 10% (docs files created) |
 | Integration | 16 | ~5% | 0% |
