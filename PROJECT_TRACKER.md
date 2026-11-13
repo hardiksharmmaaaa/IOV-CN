@@ -22,39 +22,39 @@
 
 | # | Task | Owner | Status | % Complete | Est. Time | Notes |
 |---|------|-------|--------|------------|-----------|-------|
-| 1 | Repo structure & project scaffolding | Core Developer | Pending | 0% | 0.5 day | folders, git, deps |
-| 2 | Dataset schema analysis & field mapping | Core Researcher | Pending | 0% | 1 day | inspect all JSONL splits |
-| 3 | Evidence adapter (ingest + normalize) | Data Engineer | Pending | 0% | 2 days | read JSONL, immutable IDs, timestamps |
-| 4 | Case construction & evidence index | Data Engineer | Pending | 0% | 2 days | group by relay + window |
+| 1 | Repo structure & project scaffolding | Core Developer | Done | 100% | 0.5 day | folders, git, deps |
+| 2 | Dataset schema analysis & field mapping | Core Researcher | Done | 100% | 1 day | inspect all JSONL splits |
+| 3 | Evidence adapter (ingest + normalize) | Data Engineer | Done | 100% | 2 days | read JSONL, immutable IDs, timestamps |
+| 4 | Case construction & evidence index | Data Engineer | Done | 100% | 2 days | group by relay + window |
 | 5 | Congestion specialist agent | AI Agent Dev | Done | 100% | 2 days | queue, drops, offered load, delay |
 | 6 | Wireless/mobility specialist agent | AI Agent Dev | Done | 100% | 2 days | RSSI, link, retransmissions, route changes |
 | 7 | Forwarding-pattern specialist agent | AI Agent Dev | Done | 100% | 2 days | received/forwarded, loss sequences |
 | 8 | Evidence validator | AI Agent Dev | Done | 100% | 2 days | ID existence, case membership, numeric claims |
 | 9 | Coordinator & decision rules | Core Developer | Done | 100% | 3 days | benign/malicious/insufficient evidence rules |
 | 10 | Bounded challenge round | Core Developer | Done | 100% | 2 days | conflict resolution, one revision round |
-| 11 | Baselines (loss-only threshold, single agent) | Core Researcher | Pending | 0% | 2 days | comparison baselines |
-| 12 | Evaluation framework & metrics | Core Researcher | Pending | 0% | 2 days | false accusation rate, detection rate, coverage, F1 |
-| 13 | Ablation & evidence-masking tests | Core Researcher | Pending | 0% | 2 days | remove challenge, remove abstention, hide fields |
-| 14 | Demo website (Streamlit/Gradio) | Frontend Dev | Pending | 0% | 3 days | case selector, agent findings, final verdict |
-| 15 | Documentation (agents.md, design.md, architecture.md) | Technical Writer | In Progress | 10% | 2 days | files created, content pending |
-| 16 | Final integration & end-to-end testing | Core Developer | Pending | 0% | 3 days | run pipeline end-to-end on held-out data |
+| 11 | Baselines (loss-only threshold, single agent) | Core Researcher | Done | 100% | 2 days | comparison baselines |
+| 12 | Evaluation framework & metrics | Core Researcher | Done | 100% | 2 days | false accusation rate, detection rate, coverage, F1 |
+| 13 | Ablation & evidence-masking tests | Core Researcher | Done | 100% | 2 days | remove challenge, remove abstention, hide fields |
+| 14 | Demo website (FastAPI + animated HTML) | Frontend Dev | Done | 100% | 3 days | case selector, agent findings, final verdict, animations |
+| 15 | Documentation (agents.md, design.md, architecture.md) | Technical Writer | Done | 100% | 2 days | files filled with project content |
+| 16 | Final integration & end-to-end testing | Core Developer | Done | 100% | 3 days | pipeline verified end-to-end |
 
 ## Completion Summary
 
 - **Total planned effort**: ~30 person-days
-- **Work completed**: Tasks 5–10 (agent pipeline + coordinator) + Task 15 docs files created
-- **Overall project completion**: ~42%
-- **Work remaining**: ~58%
+- **Work completed**: All 16 tasks done — setup, data adapter, agent pipeline, coordinator, baselines, evaluation, ablation, demo website, documentation, integration testing
+- **Overall project completion**: 100%
+- **Work remaining**: 0%
 
 ### Percentage by Phase
 
 | Phase | Tasks | Weight | Complete |
 |-------|-------|--------|----------|
-| Setup & Data | 1–4 | ~20% | 0% |
+| Setup & Data | 1–4 | ~20% | 100% |
 | Agent Pipeline | 5–10 | ~40% | 100% |
-| Evaluation | 11–13 | ~20% | 0% |
-| Demo & Docs | 14–15 | ~15% | 10% (docs files created) |
-| Integration | 16 | ~5% | 0% |
+| Evaluation | 11–13 | ~20% | 100% |
+| Demo & Docs | 14–15 | ~15% | 100% |
+| Integration | 16 | ~5% | 100% |
 
 ## How to Update
 

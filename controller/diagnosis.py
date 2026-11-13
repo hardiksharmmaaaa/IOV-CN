@@ -22,7 +22,7 @@ class DiagnosisResult:
     case_id: str
     monitored_node: str
     window: dict[str, Any] = field(default_factory=dict)
-    decision: Decision = field(default_factory=Decision)
+    decision: Decision = field(default_factory=lambda: Decision(primary="insufficient_evidence"))
     agent_findings: dict[str, Any] = field(default_factory=dict)
     challenge_rounds: int = 0
     trace: list[dict[str, Any]] = field(default_factory=list)

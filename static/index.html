@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IoV Forwarding Diagnosis — Agentic AI Watchdog</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap');
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
+            min-height: 100vh;
+        }
+
+        .mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* Glassmorphism */
+        .glass {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .glass-card {
+            background: linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.02));
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 16px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideInLeft {
+            from { opacity: 0; transform: translateX(-30px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        @keyframes slideInRight {
+            from { opacity: 0; transform: translateX(30px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        @keyframes pulseGlow {
+            0%, 100% { box-shadow: 0 0 20px rgba(59, 130, 246, 0.3); }
+            50% { box-shadow: 0 0 40px rgba(59, 130, 246, 0.6); }
+        }
+
+        @keyframes spinSlow {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .animate-fade-in {
+            animation: fadeIn 0.6s ease-out forwards;
+        }
+
+        .animate-slide-left {
+            animation: slideInLeft 0.5s ease-out forwards;
+        }
+
+        .animate-slide-right {
+            animation: slideInRight 0.5s ease-out forwards;
+        }
+
+        .animate-pulse-glow {
+            animation: pulseGlow 2s infinite;
+        }
+
+        .animate-spin-slow {
+            animation: spinSlow 3s linear infinite;
+        }
+
+        .case-card {
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .case-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+            border-color: rgba(59, 130, 246, 0.4);
+        }
+
+        .case-card.selected {
+            border-color: #3b82f6;
+            background: rgba(59, 130, 246, 0.15);
+            box-shadow: 0 0 30px rgba(59, 130, 246, 0.2);
+        }
+
+        /* Decision badges */
+        .badge-benign {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.875rem;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
+        }
+
+        .badge-malicious {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: white;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.875rem;
+            box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4);
+        }
+
+        .badge-insufficient {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            color: white;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.875rem;
+            box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4);
+        }
+
+        .badge-unknown {
+            background: linear-gradient(135deg, #6b7280, #4b5563);
+            color: white;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.875rem;
+        }
+
+        /* Agent cards */
+        .agent-card {
+            transition: all 0.3s ease;
+        }
+
+        .agent-card:hover {
+            transform: scale(1.02);
+        }
+
+        .agent-header {
+            background: linear-gradient(90deg, rgba(59,130,246,0.2), rgba(139,92,246,0.2));
+        }
+
+        /* Loader */
+        .loader {
+            width: 40px;
+            height: 40px;
+            border: 3px solid rgba(59, 130, 246, 0.3);
+            border-top: 3px solid #3b82f6;
+            border-radius: 50%;
+            animation: spinSlow 1s linear infinite;
+        }
+
+        /* Metric cards */
+        .metric-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .metric-card:hover {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .confidence-high { color: #10b981; }
+        .confidence-medium { color: #f59e0b; }
+        .confidence-low { color: #ef4444; }
+
+        .fade-in-stagger > * {
+            opacity: 0;
+            animation: fadeIn 0.4s ease-out forwards;
+        }
+    </style>
+</head>
+<body class="text-slate-200">
+
+    <!-- Background orbs -->
+    <div class="fixed inset-0 -z-10 overflow-hidden">
+        <div class="absolute top-[-10%] left-[-10%] w-[400px] h-[400px] rounded-full bg-blue-500/20 blur-[120px]"></div>
+        <div class="absolute bottom-[-10%] right-[-10%] w-[500px] h-[500px] rounded-full bg-purple-500/20 blur-[120px]"></div>
+        <div class="absolute top-[40%] left-[50%] w-[300px] h-[300px] rounded-full bg-emerald-500/10 blur-[100px]"></div>
+    </div>
+
+    <!-- Header -->
+    <header class="relative z-20 sticky top-0 glass-card">
+        <div class="max-w-7xl mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center animate-pulse-glow">
+                        <span class="text-white font-bold">🚗</span>
+                    </div>
+                    <div>
+                        <h1 class="text-xl font-bold text-white tracking-tight">IoV Diagnosis Watchdog</h1>
+                        <p class="text-xs text-slate-400">Agentic AI Forwarding Behavior Analyzer</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-4">
+                    <div class="glass px-3 py-1 rounded-full text-xs flex items-center gap-2">
+                        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                        <span class="text-white">System Online</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Layout -->
+    <div class="max-w-7xl mx-auto px-6 py-8">
+        
+        <!-- Stats Bar -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8 animate-fade-in">
+            <div class="metric-card">
+                <div class="text-xs text-slate-400 uppercase font-semibold tracking-wider">Total Cases</div>
+                <div class="text-2xl font-bold text-white mt-1" id="stat-total">-</div>
+            </div>
+            <div class="metric-card">
+                <div class="text-xs text-slate-400 uppercase font-semibold tracking-wider">Malicious Detected</div>
+                <div class="text-2xl font-bold text-red-400 mt-1" id="stat-malicious">-</div>
+            </div>
+            <div class="metric-card">
+                <div class="text-xs text-slate-400 uppercase font-semibold tracking-wider">Benign</div>
+                <div class="text-2xl font-bold text-emerald-400 mt-1" id="stat-benign">-</div>
+            </div>
+            <div class="metric-card">
+                <div class="text-xs text-slate-400 uppercase font-semibold tracking-wider">Insufficient Evidence</div>
+                <div class="text-2xl font-bold text-amber-400 mt-1" id="stat-insufficient">-</div>
+            </div>
+        </div>
+
+        <!-- Two Column Layout -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            
+            <!-- Left Sidebar: Case Selector -->
+            <div class="lg:col-span-4 space-y-6 animate-fade-in">
+                <div class="glass-card p-5">
+                    <h2 class="text-sm font-semibold text-slate-300 uppercase tracking-wider mb-4">Select Case</h2>
+                    
+                    <div class="flex items-center gap-2 mb-4">
+                        <input type="text" id="caseSearch" placeholder="Search case ID..." 
+                            class="w-full px-3 py-2 bg-slate-900/50 border border-slate-700 rounded-lg text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-white">
+                    </div>
+                    
+                    <div class="max-h-[600px] overflow-y-auto space-y-2" id="caseList">
+                        <!-- Cases injected here -->
+                    </div>
+                </div>
+
+                <!-- Quick Info -->
+                <div class="glass-card p-5" id="caseInfo" style="display: none;">
+                    <h2 class="text-sm font-semibold text-slate-300 uppercase tracking-wider mb-4">Case Details</h2>
+                    <div class="space-y-3 text-sm">
+                        <div class="flex justify-between border-b border-slate-700 pb-1">
+                            <span class="text-slate-400">Case ID</span>
+                            <span class="mono text-white" id="infoCaseId">-</span>
+                        </div>
+                        <div class="flex justify-between border-b border-slate-700 pb-1">
+                            <span class="text-slate-400">Node</span>
+                            <span class="text-white" id="infoNode">-</span>
+                        </div>
+                        <div class="flex justify-between border-b border-slate-700 pb-1">
+                            <span class="text-slate-400">True Behavior</span>
+                            <span class="text-white font-medium" id="infoBehavior">-</span>
+                        </div>
+                        <div class="flex justify-between border-b border-slate-700 pb-1">
+                            <span class="text-slate-400">Packets</span>
+                            <span class="mono text-white" id="infoPackets">-</span>
+                        </div>
+                        <div class="flex justify-between border-b border-slate-700 pb-1">
+                            <span class="text-slate-400">Loss Ratio</span>
+                            <span class="mono text-white" id="infoLossRatio">-</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right: Diagnosis View -->
+            <div class="lg:col-span-8 space-y-6 animate-fade-in">
+                
+                <!-- Empty State -->
+                <div id="emptyState" class="glass-card flex flex-col items-center justify-center h-[500px] text-center">
+                    <div class="w-20 h-20 rounded-full bg-slate-800/50 flex items-center justify-center mb-4">
+                        <span class="text-4xl">🔍</span>
+                    </div>
+                    <h3 class="text-xl font-semibold text-white mb-2">Select a case to begin</h3>
+                    <p class="text-slate-400 text-sm max-w-md">Choose a relay case from the left panel to run the agentic diagnosis pipeline.</p>
+                </div>
+
+                <!-- Diagnosis Result (hidden initially) -->
+                <div id="diagnosisView" class="hidden space-y-6">
+                    
+                    <!-- Verdict Header -->
+                    <div class="glass-card p-6 animate-slide-left">
+                        <div class="flex items-center justify-between mb-4">
+                            <div>
+                                <h2 class="text-lg font-bold text-white">Diagnosis Result</h2>
+                                <p class="text-sm text-slate-400" id="verdictCaseId">Case ID</p>
+                            </div>
+                            <div class="text-right">
+                                <div class="text-xs text-slate-400 uppercase font-semibold mb-1">Final Verdict</div>
+                                <span id="verdictBadge" class="badge-unknown px-4 py-2">Unknown</span>
+                            </div>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mt-6">
+                            <div class="metric-card">
+                                <div class="text-xs text-slate-400 uppercase font-semibold">Decision</div>
+                                <div class="text-lg font-bold text-white mt-1" id="verdictPrimary">-</div>
+                            </div>
+                            <div class="metric-card">
+                                <div class="text-xs text-slate-400 uppercase font-semibold">Confidence</div>
+                                <div class="text-lg font-bold mt-1" id="verdictConfidence" class="text-white">-</div>
+                            </div>
+                            <div class="metric-card">
+                                <div class="text-xs text-slate-400 uppercase font-semibold">Challenge Rounds</div>
+                                <div class="text-lg font-bold text-blue-400 mt-1" id="verdictChallenges">0</div>
+                            </div>
+                            <div class="metric-card">
+                                <div class="text-xs text-slate-400 uppercase font-semibold">Rule Applied</div>
+                                <div class="text-xs font-mono text-slate-300 mt-1 break-all" id="verdictRule">-</div>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-4 p-3 bg-slate-900/30 rounded-lg border border-slate-700">
+                            <p class="text-sm text-white font-medium mb-1">Reasoning:</p>
+                            <p class="text-sm text-slate-300" id="verdictReasoning">-</p>
+                        </div>
+                    </div>
+
+                    <!-- Agent Findings Grid -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 animate-slide-right">
+                        <!-- Agent cards injected here -->
+                    </div>
+
+                    <!-- Baselines Comparison -->
+                    <div class="glass-card p-6 animate-slide-left">
+                        <h2 class="text-lg font-bold text-white mb-4">Baseline Comparison</h2>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <!-- Loss Only -->
+                            <div class="glass p-4 rounded-xl">
+                                <h3 class="text-sm font-semibold text-slate-300 mb-2">Loss-Only Rule</h3>
+                                <div class="text-xs text-slate-400 mb-2">Loss ratio threshold</div>
+                                <span class="badge-unknown w-full text-center block mb-3 px-3 py-1">-</div>
+                                <p class="text-xs text-slate-400 leading-relaxed" id="baselineLossReason">-</p>
+                            </div>
+                            <!-- Single Agent -->
+                            <div class="glass p-4 rounded-xl">
+                                <h3 class="text-sm font-semibold text-slate-300 mb-2">Single Agent</h3>
+                                <div class="text-xs text-slate-400 mb-2">Generalist agent decision</div>
+                                <span class="badge-unknown w-full text-center block mb-3 px-3 py-1">-</div>
+                                <p class="text-xs text-slate-400 leading-relaxed" id="baselineSingleReason">-</div>
+                            </div>
+                            <!-- Proposed -->
+                            <div class="glass p-4 rounded-xl border-blue-500/30">
+                                <h3 class="text-sm font-semibold text-blue-400 mb-2">Proposed System</h3>
+                                <div class="text-xs text-slate-400 mb-2">3 agents + coordinator</div>
+                                <span class="badge-unknown w-full text-center block mb-3 px-3 py-1 border-blue-500/50">-</div>
+                                <p class="text-xs text-slate-400 leading-relaxed" id="baselineProposedReason">-</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Ground Truth -->
+                    <div class="glass-card p-6 animate-fade-in">
+                        <div class="flex items-center justify-between mb-4">
+                            <h2 class="text-lg font-bold text-white">Ground Truth</h2>
+                            <span id="gtBadge" class="badge-unknown px-3 py-1 text-xs">-</span>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 text-sm">
+                            <div class="flex flex-col">
+                                <span class="text-slate-400 text-xs uppercase">Received</span>
+                                <span class="text-white mono" id="gtReceived">-</span>
+                            </div>
+                            <div class="flex flex-col">
+                                <span class="text-slate-400 text-xs uppercase">Forwarded</span>
+                                <span class="text-white mono" id="gtForwarded">-</span>
+                            </div>
+                            <div class="flex flex-col">
+                                <span class="text-slate-400 text-xs uppercase">Loss Ratio</span>
+                                <span class="text-white mono" id="gtLossRatio">-</span>
+                            </div>
+                            <div class="flex flex-col">
+                                <span class="text-slate-400 text-xs uppercase">Generation Case</span>
+                                <span class="text-white" id="gtGenCase">-</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Raw Evidence -->
+                    <div class="glass-card p-0 animate-fade-in">
+                        <div class="flex items-center justify-between p-4 border-b border-slate-700 bg-slate-900/30">
+                            <h2 class="text-lg font-bold text-white">Raw Telemetry Evidence</h2>
+                            <button onclick="copyEvidence()" class="text-xs text-blue-400 hover:text-blue-300 flex items-center gap-1">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"></path></svg>
+                                Copy JSON
+                            </button>
+                        </div>
+                        <pre class="mono text-xs p-4 overflow-x-auto text-slate-300 bg-black/30" id="rawEvidence">-</pre>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="fixed inset-0 z-50 bg-slate-900/90 backdrop-blur-sm hidden flex items-center justify-center">
+        <div class="text-center">
+            <div class="loader mx-auto mb-4"></div>
+            <h3 class="text-lg font-bold text-white mb-2">Analyzing Evidence...</h3>
+            <p class="text-slate-400 text-sm">Specialist agents are investigating the relay behavior</p>
+            <div class="mt-4 flex gap-2 justify-center">
+                <div class="w-2 h-2 rounded-full bg-blue-400 animate-pulse"></div>
+                <div class="w-2 h-2 rounded-full bg-purple-400 animate-pulse" style="animation-delay: 0.2s"></div>
+                <div class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" style="animation-delay: 0.4s"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = '';
+        let allCases = [];
+        let currentCaseId = null;
+
+        // Initialize
+        async function init() {
+            try {
+                const res = await fetch(`${API_BASE}/api/cases`);
+                const data = await res.json();
+                allCases = data.cases;
+                renderStats(allCases);
+                renderCaseList(allCases);
+                document.getElementById('caseSearch').addEventListener('input', (e) => {
+                    const term = e.target.value.toLowerCase();
+                    const filtered = allCases.filter(c => c.case_id.toLowerCase().includes(term));
+                    renderCaseList(filtered);
+                });
+            } catch (err) {
+                console.error('Failed to load cases:', err);
+            }
+        }
+
+        function renderStats(cases) {
+            const total = cases.length;
+            const malicious = cases.filter(c => c.true_behavior.includes('malicious')).length;
+            const benign = cases.filter(c => c.true_behavior.includes('honest')).length;
+            const uncertain = cases.filter(c => c.true_behavior.includes('uncertain')).length;
+            
+            document.getElementById('stat-total').textContent = total;
+            document.getElementById('stat-malicious').textContent = malicious;
+            document.getElementById('stat-benign').textContent = benign;
+            document.getElementById('stat-insufficient').textContent = uncertain;
+        }
+
+        function renderCaseList(cases) {
+            const container = document.getElementById('caseList');
+            container.innerHTML = '';
+            
+            cases.slice(0, 50).forEach(c => {
+                const lossRatio = c.received > 0 ? ((1 - c.forwarded / c.received) * 100).toFixed(1) : '0';
+                const div = document.createElement('div');
+                div.className = `case-card glass p-3 rounded-lg ${currentCaseId === c.case_id ? 'selected' : ''}`;
+                div.innerHTML = `
+                    <div class="flex justify-between items-start mb-1">
+                        <span class="mono text-xs font-bold text-blue-400">${c.case_id}</span>
+                        <span class="text-xs text-slate-500">${c.node}</span>
+                    </div>
+                    <div class="flex items-center gap-2 mb-2">
+                        <span class="text-xs ${c.true_behavior.includes('malicious') ? 'text-red-400' : c.true_behavior.includes('honest') ? 'text-emerald-400' : 'text-amber-400'}">
+                            ${c.true_behavior.replace(/_/g, ' ')}
+                        </span>
+                        <span class="text-xs text-slate-500">${c.difficulty}</span>
+                    </div>
+                    <div class="text-xs text-slate-400">
+                        ${c.received}→${c.forwarded} pkt (${lossRatio}% loss)
+                    </div>
+                `;
+                div.onclick = () => selectCase(c.case_id);
+                container.appendChild(div);
+            });
+        }
+
+        async function selectCase(caseId) {
+            currentCaseId = caseId;
+            
+            // Update UI selection
+            document.querySelectorAll('.case-card').forEach(el => {
+                el.classList.remove('selected');
+            });
+            
+            // Show case info
+            const caseData = allCases.find(c => c.case_id === caseId);
+            if (caseData) {
+                document.getElementById('caseInfo').style.display = 'block';
+                document.getElementById('infoCaseId').textContent = caseId;
+                document.getElementById('infoNode').textContent = caseData.node;
+                document.getElementById('infoBehavior').textContent = caseData.true_behavior.replace(/_/g, ' ');
+                document.getElementById('infoPackets').textContent = `${caseData.received} → ${caseData.forwarded}`;
+                document.getElementById('infoLossRatio').textContent = caseData.received > 0 ? ((1 - caseData.forwarded / caseData.received) * 100).toFixed(1) + '%' : '0%';
+                
+                const infoBadge = document.getElementById('infoBehavior');
+                infoBadge.className = caseData.true_behavior.includes('malicious') ? 'text-red-400 font-medium' : 
+                                   caseData.true_behavior.includes('honest') ? 'text-emerald-400 font-medium' : 'text-amber-400 font-medium';
+            }
+
+            // Show loading
+            document.getElementById('emptyState').classList.add('hidden');
+            document.getElementById('diagnosisView').classList.add('hidden');
+            document.getElementById('loadingOverlay').classList.remove('hidden');
+
+            try {
+                const res = await fetch(`${API_BASE}/api/diagnose`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ case_id: caseId })
+                });
+                const data = await res.json();
+                renderDiagnosis(data);
+            } catch (err) {
+                console.error('Diagnosis failed:', err);
+                alert('Diagnosis failed. Make sure the API server is running.');
+            } finally {
+                document.getElementById('loadingOverlay').classList.add('hidden');
+            }
+        }
+
+        function renderDiagnosis(data) {
+            const d = data.decision;
+            
+            // Show diagnosis view
+            document.getElementById('emptyState').classList.add('hidden');
+            document.getElementById('diagnosisView').classList.remove('hidden');
+
+            // Verdict
+            const verdictEl = document.getElementById('verdictBadge');
+            verdictEl.className = d.primary === 'benign' ? 'badge-benign px-4 py-2' :
+                                 d.primary === 'suspected_malicious' ? 'badge-malicious px-4 py-2' :
+                                 'badge-insufficient px-4 py-2';
+            verdictEl.textContent = d.primary.replace(/_/g, ' ').toUpperCase();
+
+            document.getElementById('verdictCaseId').textContent = `${data.case_id} (${data.monitored_node})`;
+            document.getElementById('verdictPrimary').textContent = d.primary.replace(/_/g, ' ').toUpperCase();
+            document.getElementById('verdictConfidence').textContent = d.confidence.toUpperCase();
+            document.getElementById('verdictConfidence').className = `text-lg font-bold ${d.confidence === 'high' ? 'confidence-high' : d.confidence === 'medium' ? 'confidence-medium' : 'confidence-low'}`;
+            document.getElementById('verdictChallenges').textContent = data.challenge_rounds;
+            document.getElementById('verdictRule').textContent = d.rule_applied;
+            document.getElementById('verdictReasoning').textContent = d.primary === 'insufficient_evidence' 
+                ? 'Evidence is insufficient to make a defensible decision. The system abstains rather than guessing.'
+                : d.rule_applied;
+
+            // Agent findings
+            const agentGrid = document.querySelector('.grid.grid-cols-1.md\\:grid-cols-3.gap-4.animate-slide-right');
+            agentGrid.innerHTML = '';
+            
+            const agents = [
+                { key: 'congestion_agent', name: 'Congestion Agent', subtitle: 'Queue • Drops • Delay' },
+                { key: 'wireless_mobility_agent', name: 'Wireless/Mobility Agent', subtitle: 'RSSI • Link • Visibility' },
+                { key: 'forwarding_pattern_agent', name: 'Forwarding-Pattern Agent', subtitle: 'Received • Forwarded • Loss' }
+            ];
+
+            agents.forEach((agent, idx) => {
+                const f = data.agent_findings[agent.key] || {};
+                const cause = f.candidate_cause || 'insufficient_evidence';
+                const conf = f.confidence || 'low';
+                
+                const card = document.createElement('div');
+                card.className = `agent-card glass p-4 rounded-xl animate-fade-in`;
+                card.style.animationDelay = `${idx * 0.1}s`;
+                card.style.animationFillMode = 'both';
+                
+                const badgeClass = cause === 'honest_congestion_full_queue' || cause === 'honest_link_degradation' || cause === 'honest_normal' 
+                    ? 'badge-benign' : 
+                    cause === 'malicious_blackhole' || cause === 'malicious_selective_forwarding' 
+                    ? 'badge-malicious' : 
+                    'badge-insufficient';
+                
+                card.innerHTML = `
+                    <div class="agent-header p-3 rounded-lg mb-3 flex items-center justify-between">
+                        <div class="flex items-center gap-2">
+                            <div class="w-2 h-2 rounded-full ${cause.includes('malicious') ? 'bg-red-500' : cause.includes('honest') ? 'bg-emerald-500' : 'bg-amber-500'}"></div>
+                            <span class="text-xs font-bold text-slate-200 uppercase">${agent.name}</span>
+                        </div>
+                        <span class="text-[10px] text-slate-500 uppercase">${agent.subtitle}</span>
+                    </div>
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-xs font-medium text-slate-300">Cause</span>
+                        <span class="${badgeClass} px-2 py-1 text-[10px]">${cause.replace(/_/g, ' ').toUpperCase()}</span>
+                    </div>
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-xs font-medium text-slate-300">Confidence</span>
+                        <span class="text-xs font-mono ${conf === 'high' ? 'confidence-high' : conf === 'medium' ? 'confidence-medium' : 'confidence-low'}">${conf.toUpperCase()}</span>
+                    </div>
+                    <div class="mt-2">
+                        <span class="text-[10px] text-slate-400 block mb-1">Justification</span>
+                        <p class="text-xs text-slate-200 leading-relaxed">${f.justification || 'No justification provided.'}</p>
+                    </div>
+                    <div class="mt-2 flex gap-1">
+                        <span class="text-[10px] bg-slate-800 px-1.5 py-0.5 rounded text-slate-400">Records: ${f.supporting_record_ids?.length || 0}</span>
+                        <span class="text-[10px] bg-slate-800 px-1.5 py-0.5 rounded text-slate-400">Tools: ${f.tool_calls_used || 0}</span>
+                    </div>
+                `;
+                agentGrid.appendChild(card);
+            });
+
+            // Baselines
+            const bl = data.baselines;
+            if (bl) {
+                // Loss only
+                const loBadge = document.getElementById('baselineLossBadge') || createBadgeElement('baselineLossBadge');
+                loBadge.className = bl.loss_only.primary === 'suspected_malicious' ? 'badge-malicious' : 'badge-benign';
+                loBadge.textContent = bl.loss_only.primary.toUpperCase();
+                document.getElementById('baselineLossReason').textContent = bl.loss_only.rule_applied;
+                
+                // Single agent
+                const saBadge = document.getElementById('baselineSingleBadge') || createBadgeElement('baselineSingleBadge');
+                saBadge.className = bl.single_agent.primary === 'suspected_malicious' ? 'badge-malicious' : 'badge-benign';
+                saBadge.textContent = bl.single_agent.primary.toUpperCase();
+                document.getElementById('baselineSingleReason').textContent = bl.single_agent.justification;
+                
+                // Proposed
+                const propBadge = document.getElementById('baselineProposedBadge') || createBadgeElement('baselineProposedBadge');
+                propBadge.className = d.primary === 'benign' ? 'badge-benign' : d.primary === 'suspected_malicious' ? 'badge-malicious' : 'badge-insufficient';
+                propBadge.textContent = d.primary.toUpperCase();
+                document.getElementById('baselineProposedReason').textContent = d.rule_applied;
+            }
+
+            // Ground Truth
+            const gt = data.ground_truth || {};
+            document.getElementById('gtBadge').className = gt.true_behavior?.includes('malicious') ? 'badge-malicious' : gt.true_behavior?.includes('honest') ? 'badge-benign' : 'badge-insufficient';
+            document.getElementById('gtBadge').textContent = gt.true_behavior ? gt.true_behavior.replace(/_/g, ' ').toUpperCase() : 'UNKNOWN';
+            document.getElementById('gtReceived').textContent = gt.actual_packets_received || '-';
+            document.getElementById('gtForwarded').textContent = gt.actual_packets_forwarded || '-';
+            document.getElementById('gtLossRatio').textContent = gt.actual_packets_received > 0 ? ((1 - gt.actual_packets_forwarded / gt.actual_packets_received) * 100).toFixed(1) + '%' : '-';
+            document.getElementById('gtGenCase').textContent = gt.generation_case || '-';
+
+            // Raw evidence
+            document.getElementById('rawEvidence').textContent = JSON.stringify(data, null, 2);
+        }
+
+        function createBadgeElement(id) {
+            const el = document.createElement('span');
+            el.id = id;
+            el.className = 'badge-unknown w-full text-center block mb-3 px-3 py-1';
+            return el;
+        }
+
+        function copyEvidence() {
+            const el = document.getElementById('rawEvidence');
+            navigator.clipboard.writeText(el.textContent);
+            const original = el.style.borderColor;
+            el.style.borderColor = '#10b981';
+            setTimeout(() => el.style.borderColor = original, 500);
+        }
+
+        // Start
+        init();
+    </script>
+</body>
+</html>

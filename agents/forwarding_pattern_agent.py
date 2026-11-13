@@ -71,8 +71,8 @@ class ForwardingPatternAgent:
             r.get("record_id") for r in link_records if r.get("case_id") == case_id
         ]
 
-        received = sum(r.get("packets_received", 0) for r in pattern_records)
-        forwarded = sum(r.get("packets_forwarded", 0) for r in pattern_records)
+        received = sum(r.get("packets_overheard_received", 0) for r in pattern_records)
+        forwarded = sum(r.get("packets_overheard_forwarded", 0) for r in pattern_records)
         loss_ratio = 1 - (forwarded / received) if received > 0 else 0
 
         selective = any(
@@ -148,8 +148,8 @@ class ForwardingPatternAgent:
         )
         finding.tool_calls_used = 1
 
-        received = sum(r.get("packets_received", 0) for r in extra)
-        forwarded = sum(r.get("packets_forwarded", 0) for r in extra)
+        received = sum(r.get("packets_overheard_received", 0) for r in extra)
+        forwarded = sum(r.get("packets_overheard_forwarded", 0) for r in extra)
         loss_ratio = 1 - (forwarded / received) if received > 0 else 0
         selective = any(
             r.get("selective_drop_indicator", False) for r in extra

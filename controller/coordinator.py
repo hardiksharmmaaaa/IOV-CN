@@ -115,9 +115,16 @@ class Coordinator:
         }
         unique_causes = set(candidate_causes.values())
 
+        # Concrete (non-abstained) causes
+        concrete_causes = {
+            name: c for name, c in candidate_causes.items()
+            if c != "insufficient_evidence"
+        }
+        unique_concrete = set(concrete_causes.values())
+
         challenge_rounds = 0
-        if len(unique_causes) > 1 and "insufficient_evidence" not in unique_causes:
-            # Agents disagree on concrete causes -> bounded challenge round
+        # Agents disagree on concrete causes -> bounded challenge round
+        if len(unique_concrete) > 1:
             challenge_rounds = 1
             result.trace.append(
                 {
