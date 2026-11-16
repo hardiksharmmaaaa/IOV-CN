@@ -112,7 +112,7 @@ This document contains instructions for every AI agent role working on the IoV F
 ---
 
 ### Frontend Dev
-**Owns:** `demo_app.py` — Streamlit demo website.
+**Owns:** `api.py` and `static/index.html` — Flask-backed dashboard.
 
 **Responsibilities:**
 - Case selector from dataset splits
@@ -120,9 +120,9 @@ This document contains instructions for every AI agent role working on the IoV F
 - Run diagnosis pipeline and display per-agent findings
 - Show coordinator verdict, rule applied, challenge rounds
 - Compare against baselines (loss-only, single agent)
-- Run on `streamlit run demo_app.py`
+- Run with `python3 api.py` and open `http://localhost:7777`
 
-**Deliverables:** `demo_app.py`.
+**Deliverables:** `api.py`, `static/index.html`.
 
 ---
 
@@ -151,8 +151,8 @@ This document contains instructions for every AI agent role working on the IoV F
 # Run full pipeline smoke test
 python3 -c "from data import EvidenceAdapter; ..."
 
-# Run Streamlit demo
-streamlit run demo_app.py
+# Run Flask dashboard
+python3 api.py
 
 # Run baselines comparison
 python3 -c "from baselines import ..."

@@ -15,7 +15,7 @@
 | AI Agent Dev (x3) | Congestion agent, Wireless/mobility agent, Forwarding-pattern agent |
 | AI Agent Dev (Validator) | Evidence ID validation, numeric claim checking, schema validation |
 | Core Developer | Coordinator, decision rules, bounded challenge round, final integration |
-| Frontend Dev | Demo website (Streamlit/Gradio or React) |
+| Frontend Dev | Flask API + animated HTML dashboard |
 | Technical Writer | `agents.md`, `design.md`, `architecture.md`, reports |
 
 ## Task Tracker
@@ -35,7 +35,7 @@
 | 11 | Baselines (loss-only threshold, single agent) | Core Researcher | Done | 100% | 2 days | comparison baselines |
 | 12 | Evaluation framework & metrics | Core Researcher | Done | 100% | 2 days | false accusation rate, detection rate, coverage, F1 |
 | 13 | Ablation & evidence-masking tests | Core Researcher | Done | 100% | 2 days | remove challenge, remove abstention, hide fields |
-| 14 | Demo website (FastAPI + animated HTML) | Frontend Dev | Done | 100% | 3 days | case selector, agent findings, final verdict, animations |
+| 14 | Demo website (Flask + animated HTML) | Frontend Dev | Done | 100% | 3 days | case selector, agent findings, final verdict, animations |
 | 15 | Documentation (agents.md, design.md, architecture.md) | Technical Writer | Done | 100% | 2 days | files filled with project content |
 | 16 | Final integration & end-to-end testing | Core Developer | Done | 100% | 3 days | pipeline verified end-to-end |
 

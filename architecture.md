@@ -12,8 +12,8 @@
                                                             ▼
 ┌─────────────────┐      ┌──────────────────┐      ┌─────────────────┐
 │   Case Selector │─────▶│   Coordinator    │─────▶│  Diagnosis      │
-│  (demo_app.py)  │      │  (controller/)   │      │  Result         │
-│   (Streamlit)   │      │                  │      │  (verdict +     │
+│ (static/index)  │      │  (controller/)   │      │  Result         │
+│  (Flask API)    │      │                  │      │  (verdict +     │
 └─────────────────┘      └────────┬─────────┘      │   trace)        │
                                  │                  └─────────────────┘
                                  │
@@ -88,8 +88,8 @@ Each returns a structured finding: `candidate_cause`, `supporting_record_ids`, `
 - Variants: full system, no challenge round, no abstention, masked 10/30/50% evidence
 - Compares decisions across variants
 
-### 9. Demo Website (`demo_app.py`)
-- Streamlit app at `http://localhost:8501`
+### 9. Flask Dashboard (`api.py` + `static/index.html`)
+- Flask app at `http://localhost:7777` with a product homepage at `/` and diagnosis dashboard at `/dashboard`
 - Case selector, agent findings, coordinator verdict, baseline comparison, raw telemetry viewer
 
 ## Decision Rules (Coordinator)
@@ -142,7 +142,9 @@ IOV/
 ├── evaluation/
 │   ├── __init__.py
 │   └── ablation.py              # Ablation & masking tests
-├── demo_app.py                  # Streamlit demo website
+├── api.py                       # Flask API and static dashboard server
+├── static/
+│   └── index.html                # Animated dashboard frontend
 ├── Monitoring-Dataset/          # JSONL splits + CSVs
 │   ├── easy_test_sft.jsonl
 │   ├── medium_test_sft.jsonl
@@ -166,7 +168,7 @@ IOV/
 | Agents | Coordinator | `investigate(case_id, raw_sources, available_tools)` → Finding |
 | Agents | Coordinator | `revise(case_id, counterevidence, raw_sources, available_tools)` → Finding |
 | Validator | Coordinator | `validate_finding(case_id, finding_dict)` → (bool, issues) |
-| Coordinator | Demo App | `diagnose(case_id, node, window, raw_sources)` → DiagnosisResult |
+| Coordinator | Flask API | `diagnose(case_id, node, window, raw_sources)` → DiagnosisResult |
 | Baselines | Evaluator | `diagnose(case_id, raw_sources)` → prediction string |
 
 ## Configuration

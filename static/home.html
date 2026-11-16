@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Evidence-grounded forwarding diagnosis for intelligent vehicle networks.">
+    <title>IoV Watchdog — Forwarding intelligence</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --ink: #071018;
+            --panel: #0d1924;
+            --panel-raised: #122231;
+            --line: rgba(166, 216, 232, .14);
+            --line-strong: rgba(166, 216, 232, .26);
+            --text: #e8f1f4;
+            --muted: #8296a3;
+            --cyan: #6de2ff;
+            --mint: #b8ef9e;
+            --amber: #f4bd71;
+            --rose: #ff8793;
+            --sans: 'Space Grotesk', sans-serif;
+            --mono: 'IBM Plex Mono', monospace;
+        }
+        * { box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            min-height: 100vh;
+            margin: 0;
+            overflow-x: hidden;
+            color: var(--text);
+            font-family: var(--sans);
+            background:
+                radial-gradient(circle at 76% 0%, rgba(54, 143, 171, .16), transparent 31rem),
+                radial-gradient(circle at 8% 52%, rgba(26, 82, 110, .13), transparent 25rem),
+                linear-gradient(135deg, #071018 0%, #0a141e 48%, #09131b 100%);
+        }
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            pointer-events: none;
+            opacity: .3;
+            background-image: linear-gradient(rgba(109, 226, 255, .038) 1px, transparent 1px), linear-gradient(90deg, rgba(109, 226, 255, .038) 1px, transparent 1px);
+            background-size: 44px 44px;
+            mask-image: linear-gradient(to bottom, #000 0%, transparent 84%);
+        }
+        a { color: inherit; text-decoration: none; }
+        .page { width: min(1180px, calc(100% - 48px)); margin: 0 auto; }
+        .topbar { display: flex; align-items: center; justify-content: space-between; padding: 23px 0; border-bottom: 1px solid var(--line); }
+        .brand { display: flex; align-items: center; gap: 13px; }
+        .brand-mark { width: 40px; height: 40px; display: grid; place-items: center; border-radius: 12px; color: var(--ink); background: var(--cyan); font-size: 11px; font-weight: 700; letter-spacing: -.09em; box-shadow: 0 0 0 6px rgba(109, 226, 255, .08), 0 0 32px rgba(109, 226, 255, .24); }
+        .brand-name { margin: 0; color: var(--text); font-size: 15px; letter-spacing: -.03em; }
+        .brand-caption { margin: 3px 0 0; color: var(--muted); font-size: 10px; }
+        .top-nav { display: flex; align-items: center; gap: 25px; color: var(--muted); font-size: 12px; }
+        .top-nav a { transition: color .18s ease; }
+        .top-nav a:hover, .top-nav a:focus-visible { color: var(--cyan); }
+        .nav-cta { padding: 9px 13px; color: var(--ink) !important; background: var(--cyan); border-radius: 8px; font-weight: 700; }
+        .hero { display: grid; grid-template-columns: minmax(0, 1.02fr) minmax(420px, .98fr); gap: 76px; align-items: center; min-height: 610px; padding: 74px 0 80px; }
+        .eyebrow { display: flex; align-items: center; gap: 10px; margin-bottom: 23px; color: var(--cyan); font-family: var(--mono); font-size: 10px; letter-spacing: .12em; text-transform: uppercase; }
+        .eyebrow::before { content: ''; width: 28px; height: 1px; background: var(--cyan); box-shadow: 0 0 12px var(--cyan); }
+        h1 { max-width: 650px; margin: 0; color: var(--text); font-size: clamp(3.2rem, 6vw, 5.65rem); font-weight: 600; line-height: .98; letter-spacing: -.075em; }
+        .hero-copy { max-width: 515px; margin: 27px 0 0; color: #aec1c9; font-size: 17px; line-height: 1.6; }
+        .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 33px; }
+        .button { display: inline-flex; align-items: center; gap: 10px; padding: 13px 17px; border: 1px solid var(--line-strong); border-radius: 9px; font-size: 13px; font-weight: 600; transition: transform .2s ease, border-color .2s ease, background .2s ease; }
+        .button:hover, .button:focus-visible { transform: translateY(-2px); border-color: var(--cyan); }
+        .button-primary { color: var(--ink); background: var(--cyan); border-color: var(--cyan); box-shadow: 0 10px 32px rgba(109, 226, 255, .18); }
+        .button-secondary { color: var(--text); background: rgba(13, 25, 36, .7); }
+        .arrow { font-size: 17px; line-height: 0; }
+        .hero-note { display: flex; align-items: center; gap: 8px; margin-top: 24px; color: var(--muted); font-family: var(--mono); font-size: 10px; }
+        .hero-note span { width: 6px; height: 6px; border-radius: 50%; background: var(--mint); box-shadow: 0 0 12px var(--mint); }
+
+        .network-visual { position: relative; min-height: 460px; padding: 31px; overflow: hidden; background: linear-gradient(145deg, rgba(18, 34, 49, .9), rgba(8, 19, 28, .88)); border: 1px solid var(--line-strong); border-radius: 20px; box-shadow: 0 25px 75px rgba(0, 0, 0, .24); animation: rise-in .7s .1s ease both; }
+        .network-visual::before { content: ''; position: absolute; inset: 0; opacity: .5; background: linear-gradient(rgba(109, 226, 255, .035) 1px, transparent 1px), linear-gradient(90deg, rgba(109, 226, 255, .035) 1px, transparent 1px); background-size: 34px 34px; }
+        .visual-top { position: relative; z-index: 1; display: flex; align-items: flex-start; justify-content: space-between; }
+        .visual-label { color: var(--muted); font-family: var(--mono); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; }
+        .visual-status { display: flex; align-items: center; gap: 7px; color: var(--mint); font-family: var(--mono); font-size: 10px; }
+        .visual-status::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--mint); box-shadow: 0 0 12px var(--mint); animation: beacon 2s ease-in-out infinite; }
+        .route-map { position: relative; z-index: 1; height: 245px; margin-top: 53px; }
+        .route-line { position: absolute; top: 95px; height: 1px; background: linear-gradient(90deg, transparent, var(--cyan), transparent); box-shadow: 0 0 13px rgba(109, 226, 255, .65); }
+        .route-line.left { left: 8%; width: 34%; transform: rotate(-12deg); }
+        .route-line.right { right: 8%; width: 34%; transform: rotate(12deg); }
+        .signal { position: absolute; top: 91px; width: 9px; height: 9px; border-radius: 50%; background: var(--cyan); box-shadow: 0 0 16px var(--cyan); animation: travel 3.2s linear infinite; }
+        .signal.left { left: 23%; }
+        .signal.right { right: 23%; animation-delay: 1.3s; }
+        .node { position: absolute; top: 40px; display: grid; place-items: center; width: 112px; height: 112px; border: 1px solid var(--line-strong); border-radius: 50%; background: rgba(9, 20, 29, .88); }
+        .node::before { content: ''; position: absolute; inset: 9px; border: 1px dashed rgba(109, 226, 255, .32); border-radius: 50%; animation: spin 16s linear infinite; }
+        .node-left { left: 0; }
+        .node-center { left: 50%; top: 0; width: 142px; height: 142px; transform: translateX(-50%); border-color: var(--cyan); box-shadow: 0 0 0 12px rgba(109, 226, 255, .05), 0 0 55px rgba(109, 226, 255, .15); }
+        .node-right { right: 0; }
+        .node-core { position: relative; z-index: 1; text-align: center; }
+        .node-icon { display: block; margin-bottom: 8px; color: var(--cyan); font-family: var(--mono); font-size: 18px; }
+        .node-title { display: block; color: var(--text); font-size: 10px; font-weight: 600; }
+        .node-meta { display: block; margin-top: 5px; color: var(--muted); font-family: var(--mono); font-size: 8px; }
+        .signal-panel { position: absolute; right: 31px; bottom: 29px; left: 31px; z-index: 1; display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; padding-top: 20px; border-top: 1px solid var(--line); }
+        .signal-value { display: block; color: var(--text); font-family: var(--mono); font-size: 14px; }
+        .signal-label { display: block; margin-top: 5px; color: var(--muted); font-size: 10px; }
+        .signal-value.mint { color: var(--mint); }
+        .signal-value.amber { color: var(--amber); }
+        .signal-value.cyan { color: var(--cyan); }
+
+        .proof-strip { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; margin: 0 0 90px; background: var(--line); border: 1px solid var(--line); }
+        .proof-item { padding: 21px 24px; background: rgba(13, 25, 36, .72); }
+        .proof-value { display: block; color: var(--text); font-size: 24px; font-weight: 600; letter-spacing: -.05em; }
+        .proof-label { display: block; margin-top: 7px; color: var(--muted); font-family: var(--mono); font-size: 10px; }
+        .section-heading { max-width: 590px; margin-bottom: 30px; }
+        .section-heading h2 { margin: 0; color: var(--text); font-size: clamp(2rem, 4vw, 3.25rem); font-weight: 500; letter-spacing: -.06em; line-height: 1.02; }
+        .section-heading p { margin: 16px 0 0; color: var(--muted); font-size: 15px; line-height: 1.6; }
+        .principles { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 90px; }
+        .principle { min-height: 210px; padding: 23px; background: rgba(13, 25, 36, .72); border: 1px solid var(--line); border-radius: 13px; transition: transform .2s ease, border-color .2s ease; }
+        .principle:hover { transform: translateY(-4px); border-color: var(--line-strong); }
+        .principle-index { color: var(--cyan); font-family: var(--mono); font-size: 11px; }
+        .principle h3 { margin: 53px 0 10px; color: var(--text); font-size: 17px; font-weight: 600; }
+        .principle p { margin: 0; color: var(--muted); font-size: 13px; line-height: 1.55; }
+        .closing { display: flex; align-items: center; justify-content: space-between; gap: 30px; padding: 39px 42px; margin-bottom: 76px; background: linear-gradient(100deg, rgba(109, 226, 255, .1), rgba(13, 25, 36, .76)); border: 1px solid rgba(109, 226, 255, .23); border-radius: 16px; }
+        .closing h2 { max-width: 530px; margin: 0; color: var(--text); font-size: clamp(1.7rem, 3vw, 2.55rem); font-weight: 500; letter-spacing: -.055em; line-height: 1.05; }
+        footer { display: flex; justify-content: space-between; gap: 20px; padding: 19px 0 25px; border-top: 1px solid var(--line); color: var(--muted); font-family: var(--mono); font-size: 10px; }
+        @keyframes rise-in { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes beacon { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: .45; transform: scale(.8); } }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        @keyframes travel { 0% { opacity: 0; transform: translateX(-18px); } 18%, 78% { opacity: 1; } 100% { opacity: 0; transform: translateX(78px); } }
+        :focus-visible { outline: 2px solid var(--cyan); outline-offset: 4px; }
+        @media (max-width: 850px) {
+            .hero { grid-template-columns: 1fr; gap: 42px; padding-top: 56px; }
+            .network-visual { min-height: 410px; }
+            .principles { grid-template-columns: 1fr; }
+        }
+        @media (max-width: 600px) {
+            .page { width: min(100% - 28px, 1180px); }
+            .top-nav a:not(.nav-cta) { display: none; }
+            h1 { font-size: 3.1rem; }
+            .hero-copy { font-size: 15px; }
+            .network-visual { min-height: 370px; padding: 22px; }
+            .node { width: 84px; height: 84px; top: 53px; }
+            .node-center { width: 108px; height: 108px; top: 12px; }
+            .node-icon { margin-bottom: 4px; font-size: 13px; }
+            .node-title { font-size: 8px; }
+            .node-meta { margin-top: 3px; font-size: 6px; }
+            .route-map { margin-top: 42px; }
+            .signal-panel { right: 22px; bottom: 22px; left: 22px; }
+            .proof-strip { grid-template-columns: 1fr; margin-bottom: 70px; }
+            .closing { align-items: flex-start; flex-direction: column; padding: 27px; margin-bottom: 55px; }
+            footer { align-items: flex-start; flex-direction: column; }
+        }
+        @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; } }
+    </style>
+</head>
+<body>
+    <div class="page">
+        <header class="topbar">
+            <a class="brand" href="/" aria-label="IoV Watchdog home">
+                <span class="brand-mark">IOV</span>
+                <span>
+                    <strong class="brand-name">IoV Diagnosis Watchdog</strong>
+                    <span class="brand-caption">Forwarding intelligence for connected vehicles</span>
+                </span>
+            </a>
+            <nav class="top-nav" aria-label="Primary navigation">
+                <a href="#approach">Approach</a>
+                <a href="#principles">Why it matters</a>
+                <a class="nav-cta" href="/dashboard">Open dashboard <span class="arrow">↗</span></a>
+            </nav>
+        </header>
+
+        <main>
+            <section class="hero">
+                <div>
+                    <div class="eyebrow">Evidence-grounded network intelligence</div>
+                    <h1>Know when a relay is failing — and why.</h1>
+                    <p class="hero-copy">IoV Watchdog investigates forwarding behavior across vehicle networks, separating malicious packet drops from congestion, weak links, and incomplete observation.</p>
+                    <div class="hero-actions">
+                        <a class="button button-primary" href="/dashboard">Open diagnosis dashboard <span class="arrow">↗</span></a>
+                        <a class="button button-secondary" href="#approach">See how it works <span class="arrow">↓</span></a>
+                    </div>
+                    <div class="hero-note"><span></span> Built to abstain when the evidence is not enough</div>
+                </div>
+
+                <div class="network-visual" aria-label="Animated relay network illustration">
+                    <div class="visual-top">
+                        <span class="visual-label">Relay observation / live model</span>
+                        <span class="visual-status">Signal path active</span>
+                    </div>
+                    <div class="route-map">
+                        <div class="route-line left"></div>
+                        <div class="route-line right"></div>
+                        <div class="signal left"></div>
+                        <div class="signal right"></div>
+                        <div class="node node-left"><div class="node-core"><span class="node-icon">◌</span><span class="node-title">UPSTREAM</span><span class="node-meta">receipt</span></div></div>
+                        <div class="node node-center"><div class="node-core"><span class="node-icon">◎</span><span class="node-title">MONITORED NODE</span><span class="node-meta">evidence focus</span></div></div>
+                        <div class="node node-right"><div class="node-core"><span class="node-icon">◌</span><span class="node-title">DOWNSTREAM</span><span class="node-meta">forwarding</span></div></div>
+                    </div>
+                    <div class="signal-panel">
+                        <div><span class="signal-value mint">3 / 3</span><span class="signal-label">specialists ready</span></div>
+                        <div><span class="signal-value cyan">1</span><span class="signal-label">bounded challenge</span></div>
+                        <div><span class="signal-value amber">∞</span><span class="signal-label">room to abstain</span></div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="proof-strip" aria-label="System capabilities">
+                <div class="proof-item"><span class="proof-value">6</span><span class="proof-label">telemetry splits</span></div>
+                <div class="proof-item"><span class="proof-value">3</span><span class="proof-label">specialist perspectives</span></div>
+                <div class="proof-item"><span class="proof-value">1</span><span class="proof-label">bounded challenge round</span></div>
+            </section>
+
+            <section id="approach">
+                <div class="section-heading">
+                    <div class="eyebrow">The diagnosis loop</div>
+                    <h2>Loss is a signal.<br>Context is the diagnosis.</h2>
+                    <p>The system reads the surrounding evidence before it makes a claim about a vehicle. Every finding is tied back to records that can be inspected.</p>
+                </div>
+                <div class="principles" id="principles">
+                    <article class="principle"><div class="principle-index">01 / observe</div><h3>Start with the relay</h3><p>Packet receipts, forwarding patterns, queue state, link quality, and mobility are gathered around the same monitored window.</p></article>
+                    <article class="principle"><div class="principle-index">02 / challenge</div><h3>Let causes disagree</h3><p>Independent specialists test congestion, wireless degradation, and malicious forwarding hypotheses before the coordinator decides.</p></article>
+                    <article class="principle"><div class="principle-index">03 / protect</div><h3>Abstain with integrity</h3><p>When required evidence is missing or contradictory, the system returns insufficient evidence instead of unfairly blaming a node.</p></article>
+                </div>
+            </section>
+
+            <section class="closing">
+                <h2>Ready to inspect a forwarding case?</h2>
+                <a class="button button-primary" href="/dashboard">Enter the dashboard <span class="arrow">↗</span></a>
+            </section>
+        </main>
+
+        <footer>
+            <span>IoV Diagnosis Watchdog</span>
+            <span>Evidence before accusation</span>
+        </footer>
+    </div>
+</body>
+</html>
