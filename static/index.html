@@ -231,6 +231,97 @@
             gap: 0.5rem;
         }
 
+        .selector-caption {
+            color: #64748b;
+            font-size: 0.75rem;
+            line-height: 1.45;
+            margin: -0.35rem 0 0.9rem;
+        }
+
+        .folder-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .folder-card {
+            width: 100%;
+            display: grid;
+            grid-template-columns: auto 1fr auto;
+            align-items: center;
+            gap: 0.65rem;
+            padding: 0.7rem 0.8rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            background: #ffffff;
+            color: #0f172a;
+            text-align: left;
+            cursor: pointer;
+            transition: border-color 0.15s ease, background 0.15s ease, transform 0.15s ease;
+        }
+
+        .folder-card:hover {
+            border-color: #cbd5e1;
+            background: #f8fafc;
+            transform: translateX(2px);
+        }
+
+        .folder-card.active {
+            border-color: #2563eb;
+            background: #eff6ff;
+            box-shadow: inset 3px 0 0 #2563eb;
+        }
+
+        .folder-mark {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            box-shadow: 0 0 10px currentColor;
+        }
+
+        .folder-mark.green { color: #22c55e; background: #22c55e; }
+        .folder-mark.yellow { color: #f4bd71; background: #f4bd71; }
+        .folder-mark.red { color: #ff8793; background: #ff8793; }
+
+        .folder-name {
+            display: block;
+            font-size: 0.8rem;
+            font-weight: 700;
+        }
+
+        .folder-description {
+            display: block;
+            color: #94a3b8;
+            font-size: 0.67rem;
+            margin-top: 0.15rem;
+        }
+
+        .folder-count {
+            color: #64748b;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.68rem;
+            white-space: nowrap;
+        }
+
+        .case-list-heading {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.75rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .case-list-heading strong {
+            color: #0f172a;
+            font-size: 0.75rem;
+        }
+
+        .case-list-heading span {
+            color: #94a3b8;
+            font-size: 0.68rem;
+        }
+
         .case-card {
             padding: 0.75rem;
             border: 1px solid #e2e8f0;
@@ -939,6 +1030,15 @@
         .search-box input { color: var(--text); background: rgba(18, 34, 49, .82); border-color: var(--line-strong); border-radius: 9px; }
         .search-box input::placeholder { color: #647984; }
         .search-box input:focus { border-color: var(--cyan); box-shadow: 0 0 0 3px rgba(109, 226, 255, .1); }
+        .selector-caption { color: var(--muted); }
+        .folder-card { color: var(--text); background: rgba(18, 34, 49, .5); border-color: var(--line); }
+        .folder-card:hover { color: var(--text); background: rgba(109, 226, 255, .08); border-color: rgba(109, 226, 255, .34); }
+        .folder-card.active { color: var(--text); background: rgba(109, 226, 255, .11); border-color: var(--cyan); box-shadow: inset 3px 0 0 var(--cyan); }
+        .folder-mark.green { color: var(--mint); background: var(--mint); }
+        .folder-mark.yellow { color: var(--amber); background: var(--amber); }
+        .folder-mark.red { color: var(--rose); background: var(--rose); }
+        .folder-description, .folder-count, .case-list-heading span { color: var(--muted); }
+        .case-list-heading strong { color: var(--text); }
         .case-list { gap: .4rem; }
         .case-card { color: var(--text); background: rgba(18, 34, 49, .5); border-color: var(--line); border-radius: 10px; transition: transform .18s ease, border-color .18s ease, background .18s ease; animation: rise-in .35s ease both; }
         .case-card:hover { color: var(--text); background: rgba(109, 226, 255, .08); border-color: rgba(109, 226, 255, .34); transform: translateX(3px); }
@@ -1064,10 +1164,16 @@
             <!-- Left Sidebar -->
             <div class="sidebar">
                 <div class="sidebar-card">
-                    <div class="sidebar-section-title">Select Case</div>
+                    <div class="sidebar-section-title">Demo case folders</div>
+                    <p class="selector-caption">Choose a difficulty folder, then select a relay case.</p>
+                    <div class="folder-list" id="folderList" aria-label="Case difficulty folders"></div>
+                    <div class="case-list-heading">
+                        <strong id="activeFolderLabel">Easy cases</strong>
+                        <span id="activeFolderCount">0 cases</span>
+                    </div>
                     <div class="search-box">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-                        <input type="text" id="caseSearch" placeholder="Search case ID...">
+                        <input type="text" id="caseSearch" placeholder="Search within this folder...">
                     </div>
                     <div class="case-list" id="caseList">
                         <!-- cases injected here -->
@@ -1287,19 +1393,28 @@
     <script>
         const API_BASE = '';
         let allCases = [];
+        let demoCases = [];
         let currentCaseId = null;
+        let activeDifficulty = 'easy';
+
+        const DEMO_CASE_LIMITS = { easy: 17, medium: 17, hard: 16 };
+        const DIFFICULTY_META = {
+            easy: { label: 'Easy', color: 'green', description: 'Clear evidence' },
+            medium: { label: 'Medium', color: 'yellow', description: 'Mixed evidence' },
+            hard: { label: 'Hard', color: 'red', description: 'Stress cases' }
+        };
 
         async function init() {
             try {
                 const res = await fetch(`${API_BASE}/api/cases`);
                 const data = await res.json();
                 allCases = data.cases;
+                demoCases = buildDemoCases(allCases);
                 renderStats(allCases);
-                renderCaseList(allCases);
+                renderFolderList();
+                renderCaseList();
                 document.getElementById('caseSearch').addEventListener('input', (e) => {
-                    const term = e.target.value.toLowerCase();
-                    const filtered = allCases.filter(c => c.case_id.toLowerCase().includes(term));
-                    renderCaseList(filtered);
+                    renderCaseList();
                 });
             } catch (err) {
                 console.error('Failed to load cases:', err);
@@ -1318,10 +1433,64 @@
             document.getElementById('stat-insufficient').textContent = uncertain;
         }
 
-        function renderCaseList(cases) {
+        function buildDemoCases(cases) {
+            const buckets = { easy: [], medium: [], hard: [] };
+            cases.forEach(c => {
+                const difficulty = String(c.difficulty || '').toLowerCase();
+                if (buckets[difficulty]) buckets[difficulty].push(c);
+            });
+
+            return Object.entries(DEMO_CASE_LIMITS).flatMap(([difficulty, limit]) =>
+                buckets[difficulty].slice(0, limit)
+            );
+        }
+
+        function renderFolderList() {
+            const container = document.getElementById('folderList');
+            container.innerHTML = '';
+
+            Object.entries(DIFFICULTY_META).forEach(([difficulty, meta]) => {
+                const count = demoCases.filter(c => c.difficulty?.toLowerCase() === difficulty).length;
+                const button = document.createElement('button');
+                button.type = 'button';
+                button.className = `folder-card ${activeDifficulty === difficulty ? 'active' : ''}`;
+                button.setAttribute('aria-pressed', activeDifficulty === difficulty ? 'true' : 'false');
+                button.setAttribute('aria-label', `${meta.label} folder, ${meta.color} marker, ${count} cases`);
+                button.innerHTML = `
+                    <span class="folder-mark ${meta.color}" aria-hidden="true"></span>
+                    <span>
+                        <span class="folder-name">${meta.label}</span>
+                        <span class="folder-description">${meta.description}</span>
+                    </span>
+                    <span class="folder-count">${count} cases</span>
+                `;
+                button.addEventListener('click', () => {
+                    activeDifficulty = difficulty;
+                    document.getElementById('caseSearch').value = '';
+                    renderFolderList();
+                    renderCaseList();
+                });
+                container.appendChild(button);
+            });
+        }
+
+        function renderCaseList() {
             const container = document.getElementById('caseList');
             container.innerHTML = '';
-            cases.slice(0, 50).forEach(c => {
+            const term = document.getElementById('caseSearch').value.trim().toLowerCase();
+            const cases = demoCases
+                .filter(c => c.difficulty?.toLowerCase() === activeDifficulty)
+                .filter(c => c.case_id.toLowerCase().includes(term));
+            const meta = DIFFICULTY_META[activeDifficulty];
+            document.getElementById('activeFolderLabel').textContent = `${meta.label} cases`;
+            document.getElementById('activeFolderCount').textContent = `${cases.length} case${cases.length === 1 ? '' : 's'}`;
+
+            if (!cases.length) {
+                container.innerHTML = '<div class="case-detail">No cases match this search.</div>';
+                return;
+            }
+
+            cases.forEach(c => {
                 const lossRatio = c.received > 0 ? ((1 - c.forwarded / c.received) * 100).toFixed(1) : '0';
                 const div = document.createElement('div');
                 div.className = `case-card ${currentCaseId === c.case_id ? 'selected' : ''}`;
