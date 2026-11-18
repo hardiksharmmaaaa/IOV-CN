@@ -4,7 +4,7 @@
 
 Present this as an evidence-grounded IoV diagnosis prototype, not as a production system.
 
-The current implementation contains deterministic Python specialist agents using evidence thresholds. The architecture is agentic, but a real LLM provider, prompt-generation flow, and live tool-calling client are not yet implemented. Do not claim that three independent LLMs investigated the cases.
+The current implementation contains deterministic Python specialist agents plus a trained, calibrated ML evidence agent. A real LLM provider, prompt-generation flow, and live tool-calling client are not implemented. Do not claim that three independent LLMs investigated the cases.
 
 The application is also a dataset-driven demonstration, not a live VANET telemetry stream.
 
@@ -31,7 +31,7 @@ Evidence Adapter
         ↓
 Case + immutable evidence records
         ↓
-Three specialist agents
+Three deterministic specialists + learned ML agent
         ↓
 Evidence Validator
         ↓
@@ -49,11 +49,15 @@ Explain each stage:
 1. The dataset contains monitoring cases from an IoV relay scenario.
 2. The evidence adapter parses each JSONL record into a normalized `Case`.
 3. Raw observations become immutable records such as `REC_000001`.
-4. Three specialists independently investigate different explanations.
-5. The validator checks whether their cited evidence belongs to the case.
-6. The coordinator applies deterministic decision rules.
+4. Three specialists investigate different explanations and the ML agent scores learned telemetry patterns.
+5. The validator checks whether cited evidence belongs to the case.
+6. The coordinator applies hybrid safety rules.
 7. If agents disagree, one bounded challenge round is allowed.
 8. The dashboard displays the result, reasoning, baselines, and trace.
+
+The learned model is trained offline with `python -m ml.train`. Random Forest is
+the default serving artifact; Logistic Regression is retained as a comparison
+model and can be selected with `IOV_ML_MODEL`.
 
 Refer to [`architecture.md`](architecture.md).
 
@@ -322,9 +326,13 @@ You can confidently claim:
 - raw evidence and diagnosis trace display
 - ablation-study code structure
 
-Describe the agents as:
+Describe the deterministic specialists as:
 
 > Specialist evidence-analysis components implemented with deterministic Python logic.
+
+Describe the learned component as:
+
+> A supervised telemetry classifier trained offline on the training split, calibrated on validation data, and constrained by the evidence-based coordinator.
 
 Do not say:
 

@@ -1,0 +1,127 @@
+{
+  "config": {
+    "split": "medium_test_sft.jsonl",
+    "cases": 1000,
+    "model_path": "artifacts/ml/random_forest.joblib"
+  },
+  "methods": {
+    "loss_only": {
+      "method_name": "loss_only",
+      "total_cases": 1000,
+      "false_accusation_rate": 0.5190380761523046,
+      "malicious_detection_rate": 0.9548192771084337,
+      "coverage": 1.0,
+      "abstention_rate": 0.0,
+      "precision_malicious": 0.5503472222222222,
+      "macro_f1": 0.667421329999182,
+      "confusion_counts": {
+        "benign": {
+          "true_benign": 499,
+          "false_positive": 259,
+          "true_negative": 240
+        },
+        "malicious": {
+          "true_malicious": 332,
+          "true_positive": 317,
+          "false_negative": 15
+        }
+      },
+      "abstention_by_class": {}
+    },
+    "single_agent": {
+      "method_name": "single_agent",
+      "total_cases": 1000,
+      "false_accusation_rate": 0.11222444889779559,
+      "malicious_detection_rate": 0.7831325301204819,
+      "coverage": 0.773,
+      "abstention_rate": 0.227,
+      "precision_malicious": 0.8227848101265823,
+      "macro_f1": 0.852310480217457,
+      "confusion_counts": {
+        "benign": {
+          "true_benign": 499,
+          "false_positive": 56,
+          "true_negative": 296
+        },
+        "malicious": {
+          "true_malicious": 332,
+          "true_positive": 260,
+          "false_negative": 40
+        }
+      },
+      "abstention_by_class": {
+        "honest_normal": 23,
+        "honest_congestion_full_queue": 59,
+        "malicious_selective_forwarding": 32,
+        "uncertain_needs_more_evidence": 48,
+        "honest_link_degradation": 65
+      }
+    },
+    "rules": {
+      "method_name": "rules",
+      "total_cases": 1000,
+      "false_accusation_rate": 0.07615230460921844,
+      "malicious_detection_rate": 0.608433734939759,
+      "coverage": 0.427,
+      "abstention_rate": 0.573,
+      "precision_malicious": 0.8416666666666667,
+      "macro_f1": 0.8281114907983038,
+      "confusion_counts": {
+        "benign": {
+          "true_benign": 499,
+          "false_positive": 38,
+          "true_negative": 82
+        },
+        "malicious": {
+          "true_malicious": 332,
+          "true_positive": 202,
+          "false_negative": 12
+        }
+      },
+      "abstention_by_class": {
+        "honest_congestion_full_queue": 118,
+        "malicious_selective_forwarding": 76,
+        "honest_normal": 178,
+        "uncertain_needs_more_evidence": 76,
+        "honest_link_degradation": 83,
+        "malicious_blackhole": 42
+      }
+    },
+    "hybrid_random_forest": {
+      "method_name": "hybrid_random_forest",
+      "total_cases": 1000,
+      "false_accusation_rate": 0.014028056112224449,
+      "malicious_detection_rate": 0.6174698795180723,
+      "coverage": 0.715,
+      "abstention_rate": 0.285,
+      "precision_malicious": 0.9669811320754716,
+      "macro_f1": 0.9771191188729007,
+      "confusion_counts": {
+        "benign": {
+          "true_benign": 499,
+          "false_positive": 7,
+          "true_negative": 426
+        },
+        "malicious": {
+          "true_malicious": 332,
+          "true_positive": 205,
+          "false_negative": 6
+        }
+      },
+      "abstention_by_class": {
+        "malicious_selective_forwarding": 75,
+        "honest_congestion_full_queue": 12,
+        "uncertain_needs_more_evidence": 98,
+        "honest_link_degradation": 53,
+        "malicious_blackhole": 46,
+        "honest_normal": 1
+      }
+    }
+  },
+  "elapsed_seconds": {
+    "loss_only": 0.0019102090154774487,
+    "single_agent": 0.003599999996367842,
+    "rules": 0.22912575001828372,
+    "hybrid_random_forest": 46.91708779201144
+  }
+}

@@ -1583,6 +1583,9 @@
                 { key: 'wireless_mobility_agent', name: 'Wireless/Mobility Agent', sub: 'RSSI • Link • Visibility' },
                 { key: 'forwarding_pattern_agent', name: 'Forwarding-Pattern Agent', sub: 'Received • Forwarded • Loss' }
             ];
+            if (data.agent_findings.ml_agent) {
+                agents.push({ key: 'ml_agent', name: 'Learned ML Agent', sub: 'Selected model • calibrated confidence' });
+            }
 
             agents.forEach((agent, idx) => {
                 const f = data.agent_findings[agent.key] || {};
@@ -1610,6 +1613,7 @@
                         <span>📄 ${f.supporting_record_ids?.length || 0} records</span>
                         <span>⚔️ ${f.counterevidence_ids?.length || 0} counterevidence</span>
                         <span>🔧 ${f.tool_calls_used || 0} tools</span>
+                        ${f.probability !== undefined ? `<span>📈 ${(f.probability * 100).toFixed(1)}% model confidence</span>` : ''}
                     </div>
                 `;
                 ag.appendChild(card);

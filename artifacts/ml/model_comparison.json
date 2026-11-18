@@ -1,0 +1,1371 @@
+{
+  "config": {
+    "seed": 42,
+    "train_split": "medium_train_sft.jsonl",
+    "validation_split": "medium_validation_sft.jsonl",
+    "test_split": "medium_test_sft.jsonl",
+    "feature_count": 76,
+    "labels": [
+      "honest_normal",
+      "honest_congestion_full_queue",
+      "honest_link_degradation",
+      "malicious_blackhole",
+      "malicious_selective_forwarding",
+      "uncertain_needs_more_evidence"
+    ],
+    "max_false_accusation_rate_for_threshold_selection": 0.05,
+    "min_coverage_for_threshold_selection": 0.7
+  },
+  "models": {
+    "random_forest": {
+      "artifact": "artifacts/ml/random_forest.joblib",
+      "confidence_threshold": 0.55,
+      "validation_metrics": {
+        "method_name": "validation",
+        "total_cases": 1000,
+        "false_accusation_rate": 0.007984031936127744,
+        "malicious_detection_rate": 0.7754491017964071,
+        "coverage": 0.717,
+        "abstention_rate": 0.283,
+        "precision_malicious": 0.9847908745247148,
+        "macro_f1": 0.9803641786056316,
+        "confusion_counts": {
+          "benign": {
+            "true_benign": 501,
+            "false_positive": 4,
+            "true_negative": 433
+          },
+          "malicious": {
+            "true_malicious": 334,
+            "true_positive": 259,
+            "false_negative": 9
+          }
+        },
+        "abstention_by_class": {
+          "honest_link_degradation": 63,
+          "uncertain_needs_more_evidence": 153,
+          "malicious_selective_forwarding": 65,
+          "malicious_blackhole": 1,
+          "honest_normal": 1
+        }
+      },
+      "test_metrics": {
+        "method_name": "random_forest",
+        "total_cases": 1000,
+        "false_accusation_rate": 0.01603206412825651,
+        "malicious_detection_rate": 0.7891566265060241,
+        "coverage": 0.715,
+        "abstention_rate": 0.285,
+        "precision_malicious": 0.9703703703703703,
+        "macro_f1": 0.9849158803212231,
+        "confusion_counts": {
+          "benign": {
+            "true_benign": 499,
+            "false_positive": 8,
+            "true_negative": 432
+          },
+          "malicious": {
+            "true_malicious": 332,
+            "true_positive": 262,
+            "false_negative": 2
+          }
+        },
+        "abstention_by_class": {
+          "uncertain_needs_more_evidence": 158,
+          "malicious_selective_forwarding": 64,
+          "honest_link_degradation": 58,
+          "malicious_blackhole": 4,
+          "honest_normal": 1
+        }
+      },
+      "threshold_candidates": [
+        {
+          "threshold": 0.5,
+          "metrics": {
+            "method_name": "validation",
+            "total_cases": 1000,
+            "false_accusation_rate": 0.017964071856287425,
+            "malicious_detection_rate": 0.8383233532934131,
+            "coverage": 0.776,
+            "abstention_rate": 0.224,
+            "precision_malicious": 0.9688581314878892,
+            "macro_f1": 0.9693475196052516,
+            "confusion_counts": {
+              "benign": {
+                "true_benign": 501,
+                "false_positive": 9,
+                "true_negative": 457
+              },
+              "malicious": {
+                "true_malicious": 334,
+                "true_positive": 280,
+                "false_negative": 13
+              }
+            },
+            "abstention_by_class": {
+              "uncertain_needs_more_evidence": 148,
+              "malicious_selective_forwarding": 40,
+              "honest_link_degradation": 34,
+              "malicious_blackhole": 1,
+              "honest_normal": 1
+            }
+          }
+        },
+        {
+          "threshold": 0.525,
+          "metrics": {
+            "method_name": "validation",
+            "total_cases": 1000,
+            "false_accusation_rate": 0.013972055888223553,
+            "malicious_detection_rate": 0.8083832335329342,
+            "coverage": 0.747,
+            "abstention_rate": 0.253,
+            "precision_malicious": 0.9747292418772563,
+            "macro_f1": 0.9767814887163118,
+            "confusion_counts": {
+              "benign": {
+                "true_benign": 501,
+                "false_positive": 7,
+                "true_negative": 445
+              },
+              "malicious": {
+                "true_malicious": 334,
+                "true_positive": 270,
+                "false_negative": 9
+              }
+            },
+            "abstention_by_class": {
+              "honest_link_degradation": 48,
+              "uncertain_needs_more_evidence": 149,
+              "malicious_selective_forwarding": 54,
+              "malicious_blackhole": 1,
+              "honest_normal": 1
+            }
+          }
+        },
+        {
+          "threshold": 0.55,
+          "metrics": {
+            "method_name": "validation",
+            "total_cases": 1000,
+            "false_accusation_rate": 0.007984031936127744,
+            "malicious_detection_rate": 0.7754491017964071,
+            "coverage": 0.717,
+            "abstention_rate": 0.283,
+            "precision_malicious": 0.9847908745247148,
+            "macro_f1": 0.9803641786056316,
+            "confusion_counts": {
+              "benign": {
+                "true_benign": 501,
+                "false_positive": 4,
+                "true_negative": 433
+              },
+              "malicious": {
+                "true_malicious": 334,
+                "true_positive": 259,
+                "false_negative": 9
+              }
+            },
+            "abstention_by_class": {
+              "honest_link_degradation": 63,
+              "uncertain_needs_more_evidence": 153,
+              "malicious_selective_forwarding": 65,
+              "malicious_blackhole": 1,
+              "honest_normal": 1
+            }
+          }
+        },
+        {
+          "threshold": 0.575,
+          "metrics": {
+            "method_name": "validation",
+            "total_cases": 1000,
+            "false_accusation_rate": 0.005988023952095809,
+            "malicious_detection_rate": 0.7275449101796407,
+            "coverage": 0.683,
+            "abstention_rate": 0.317,
+            "precision_malicious": 0.9878048780487805,
+            "macro_f1": 0.9856582157632332,
+            "confusion_counts": {
+              "benign": {
+                "true_benign": 501,
+                "false_positive": 3,
+                "true_negative": 424
+              },
+              "malicious": {
+                "true_malicious": 334,
+                "true_positive": 243,
+                "false_negative": 6
+              }
+            },
+            "abstention_by_class": {
+              "honest_link_degradation": 73,
+              "uncertain_needs_more_evidence": 158,
+              "malicious_selective_forwarding": 82,
+              "malicious_blackhole": 3,
+              "honest_normal": 1
+            }
+          }
+        },
+        {
+          "threshold": 0.6,
+          "metrics": {
+            "method_name": "validation",
+            "total_cases": 1000,
+            "false_accusation_rate": 0.005988023952095809,
+            "malicious_detection_rate": 0.6946107784431138,
+            "coverage": 0.66,
+            "abstention_rate": 0.34,
+            "precision_malicious": 0.9872340425531915,
+            "macro_f1": 0.9867407347335984,
+            "confusion_counts": {
+              "benign": {
+                "true_benign": 501,
+                "false_positive": 3,
+                "true_negative": 414
+              },
+              "malicious": {
+                "true_malicious": 334,
+                "true_positive": 232,
+                "false_negative": 5
+              }
+            },
+            "abstention_by_class": {
+              "honest_link_degradation": 82,
+              "uncertain_needs_more_evidence": 159,
+              "malicious_selective_forwarding": 93,
+              "malicious_blackhole": 4,
+              "honest_normal": 2
+            }
+          }
+        },
+        {
+          "threshold": 0.625,
+          "metrics": {
+            "method_name": "validation",
+            "total_cases": 1000,
+            "false_accusation_rate": 0.005988023952095809,
+            "malicious_detection_rate": 0.6497005988023952,
+            "coverage": 0.629,
+            "abstention_rate": 0.371,
+            "precision_malicious": 0.9863636363636363,
+            "macro_f1": 0.9912226251232343,
+            "confusion_counts": {
+              "benign": {
+                "true_benign": 501,
+                "false_positive": 3,
+                "true_negative": 403
+              },
+              "malicious": {
+                "true_malicious": 334,
+                "true_positive": 217,
+                "false_negative": 2
+              }
+            },
+            "abstention_by_class": {
+              "honest_link_degradation": 93,
+              "uncertain_needs_more_evidence": 161,
+              "malicious_selective_forwarding": 110,
+              "malicious_blackhole": 5,
+              "honest_normal": 2
+            }
+          }
+        },
+        {
+          "threshold": 0.65,
+          "metrics": {
+            "method_name": "validation",
+            "total_cases": 1000,
+            "false_accusation_rate": 0.001996007984031936,
+            "malicious_detection_rate": 0.6167664670658682,
+            "coverage": 0.604,
+            "abstention_rate": 0.396,
+            "precision_malicious": 0.9951690821256038,
+            "macro_f1": 0.9963122764317587,
+            "confusion_counts": {
+              "benign": {
+                "true_benign": 501,
+                "false_positive": 1,
+                "true_negative": 392
+              },
+              "malicious": {
+                "true_malicious": 334,
+                "true_positive": 206,
+                "false_negative": 1
+              }
+            },
+            "abstention_by_class": {
+              "honest_link_degradation": 106,
+              "uncertain_needs_more_evidence": 161,
+              "malicious_selective_forwarding": 122,
+              "malicious_blackhole": 5,
+              "honest_normal": 2
+            }
+          }
+        },
+        {
+          "threshold": 0.675,
+          "metrics": {
+            "method_name": "validation",
+            "total_cases": 1000,
+            "false_accusation_rate": 0.0,
+            "malicious_detection_rate": 0.5778443113772455,
+            "coverage": 0.577,
+            "abstention_rate": 0.423,
+            "precision_malicious": 1.0,
+            "macro_f1": 0.9980492488075905,
+            "confusion_counts": {
+              "benign": {
+                "true_benign": 501,
+                "false_positive": 0,
+                "true_negative": 379
+              },
+              "malicious": {
+                "true_malicious": 334,
+                "true_positive": 193,
+                "false_negative": 1
+              }
+            },
+            "abstention_by_class": {
+              "malicious_blackhole": 6,
+              "honest_link_degradation": 118,
+              "uncertain_needs_more_evidence": 161,
+              "malicious_selective_forwarding": 134,
+              "honest_normal": 4
+            }
+          }
+        },
+        {
+          "threshold": 0.7,
+          "metrics": {
+            "method_name": "validation",
+            "total_cases": 1000,
+            "false_accusation_rate": 0.0,
+            "malicious_detection_rate": 0.5538922155688623,
+            "coverage": 0.561,
+            "abstention_rate": 0.439,
+            "precision_malicious": 1.0,
+            "macro_f1": 0.9979829470622832,
+            "confusion_counts": {
+              "benign": {
+                "true_benign": 501,
+                "false_positive": 0,
+                "true_negative": 373
+              },
+              "malicious": {
+                "true_malicious": 334,
+                "true_positive": 185,
+                "false_negative": 1
+              }
+            },
+            "abstention_by_class": {
+              "malicious_blackhole": 7,
+              "honest_link_degradation": 123,
+              "malicious_selective_forwarding": 141,
+              "uncertain_needs_more_evidence": 163,
+              "honest_normal": 5
+            }
+          }
+        },
+        {
+          "threshold": 0.725,
+          "metrics": {
+            "method_name": "validation",
+            "total_cases": 1000,
+            "false_accusation_rate": 0.0,
+            "malicious_detection_rate": 0.5239520958083832,
+            "coverage": 0.536,
+            "abstention_rate": 0.464,
+            "precision_malicious": 1.0,
+            "macro_f1": 1.0,
+            "confusion_counts": {
+              "benign": {
+                "true_benign": 501,
+                "false_positive": 0,
+                "true_negative": 360
+              },
+              "malicious": {
+                "true_malicious": 334,
+                "true_positive": 175,
+                "false_negative": 0
+              }
+            },
+            "abstention_by_class": {
+              "malicious_blackhole": 8,
+              "honest_link_degradation": 135,
+              "malicious_selective_forwarding": 151,
+              "uncertain_needs_more_evidence": 164,
+              "honest_normal": 6
+            }
+          }
+        },
+        {
+          "threshold": 0.75,
+          "metrics": {
+            "method_name": "validation",
+            "total_cases": 1000,
+            "false_accusation_rate": 0.0,
+            "malicious_detection_rate": 0.49700598802395207,
+            "coverage": 0.518,
+            "abstention_rate": 0.482,
+            "precision_malicious": 1.0,
+            "macro_f1": 1.0,
+            "confusion_counts": {
+              "benign": {
+                "true_benign": 501,
+                "false_positive": 0,
+                "true_negative": 352
+              },
+              "malicious": {
+                "true_malicious": 334,
+                "true_positive": 166,
+                "false_negative": 0
+              }
+            },
+            "abstention_by_class": {
+              "malicious_blackhole": 10,
+              "honest_link_degradation": 141,
+              "malicious_selective_forwarding": 158,
+              "uncertain_needs_more_evidence": 165,
+              "honest_normal": 7,
+              "honest_congestion_full_queue": 1
+            }
+          }
+        },
+        {
+          "threshold": 0.775,
+          "metrics": {
+            "method_name": "validation",
+            "total_cases": 1000,
+            "false_accusation_rate": 0.0,
+            "malicious_detection_rate": 0.4880239520958084,
+            "coverage": 0.501,
+            "abstention_rate": 0.499,
+            "precision_malicious": 1.0,
+            "macro_f1": 1.0,
+            "confusion_counts": {
+              "benign": {
+                "true_benign": 501,
+                "false_positive": 0,
+                "true_negative": 338
+              },
+              "malicious": {
+                "true_malicious": 334,
+                "true_positive": 163,
+                "false_negative": 0
+              }
+            },
+            "abstention_by_class": {
+              "malicious_blackhole": 12,
+              "honest_link_degradation": 154,
+              "malicious_selective_forwarding": 159,
+              "uncertain_needs_more_evidence": 165,
+              "honest_normal": 8,
+              "honest_congestion_full_queue": 1
+            }
+          }
+        },
+        {
+          "threshold": 0.8,
+          "metrics": {
+            "method_name": "validation",
+            "total_cases": 1000,
+            "false_accusation_rate": 0.0,
+            "malicious_detection_rate": 0.47305389221556887,
+            "coverage": 0.489,
+            "abstention_rate": 0.511,
+            "precision_malicious": 1.0,
+            "macro_f1": 1.0,
+            "confusion_counts": {
+              "benign": {
+                "true_benign": 501,
+                "false_positive": 0,
+                "true_negative": 331
+              },
+              "malicious": {
+                "true_malicious": 334,
+                "true_positive": 158,
+                "false_negative": 0
+              }
+            },
+            "abstention_by_class": {
+              "malicious_blackhole": 14,
+              "honest_link_degradation": 159,
+              "malicious_selective_forwarding": 162,
+              "uncertain_needs_more_evidence": 165,
+              "honest_congestion_full_queue": 2,
+              "honest_normal": 9
+            }
+          }
+        },
+        {
+          "threshold": 0.825,
+          "metrics": {
+            "method_name": "validation",
+            "total_cases": 1000,
+            "false_accusation_rate": 0.0,
+            "malicious_detection_rate": 0.45209580838323354,
+            "coverage": 0.476,
+            "abstention_rate": 0.524,
+            "precision_malicious": 1.0,
+            "macro_f1": 1.0,
+            "confusion_counts": {
+              "benign": {
+                "true_benign": 501,
+                "false_positive": 0,
+                "true_negative": 325
+              },
+              "malicious": {
+                "true_malicious": 334,
+                "true_positive": 151,
+                "false_negative": 0
+              }
+            },
+            "abstention_by_class": {
+              "malicious_blackhole": 18,
+              "honest_normal": 12,
+              "honest_link_degradation": 162,
+              "malicious_selective_forwarding": 165,
+              "uncertain_needs_more_evidence": 165,
+              "honest_congestion_full_queue": 2
+            }
+          }
+        },
+        {
+          "threshold": 0.85,
+          "metrics": {
+            "method_name": "validation",
+            "total_cases": 1000,
+            "false_accusation_rate": 0.0,
+            "malicious_detection_rate": 0.4281437125748503,
+            "coverage": 0.462,
+            "abstention_rate": 0.538,
+            "precision_malicious": 1.0,
+            "macro_f1": 1.0,
+            "confusion_counts": {
+              "benign": {
+                "true_benign": 501,
+                "false_positive": 0,
+                "true_negative": 319
+              },
+              "malicious": {
+                "true_malicious": 334,
+                "true_positive": 143,
+                "false_negative": 0
+              }
+            },
+            "abstention_by_class": {
+              "malicious_blackhole": 25,
+              "honest_normal": 13,
+              "honest_link_degradation": 166,
+              "malicious_selective_forwarding": 166,
+              "uncertain_needs_more_evidence": 165,
+              "honest_congestion_full_queue": 3
+            }
+          }
+        },
+        {
+          "threshold": 0.875,
+          "metrics": {
+            "method_name": "validation",
+            "total_cases": 1000,
+            "false_accusation_rate": 0.0,
+            "malicious_detection_rate": 0.41916167664670656,
+            "coverage": 0.454,
+            "abstention_rate": 0.546,
+            "precision_malicious": 1.0,
+            "macro_f1": 1.0,
+            "confusion_counts": {
+              "benign": {
+                "true_benign": 501,
+                "false_positive": 0,
+                "true_negative": 314
+              },
+              "malicious": {
+                "true_malicious": 334,
+                "true_positive": 140,
+                "false_negative": 0
+              }
+            },
+            "abstention_by_class": {
+              "malicious_blackhole": 28,
+              "honest_normal": 17,
+              "honest_link_degradation": 166,
+              "malicious_selective_forwarding": 166,
+              "uncertain_needs_more_evidence": 165,
+              "honest_congestion_full_queue": 4
+            }
+          }
+        },
+        {
+          "threshold": 0.9,
+          "metrics": {
+            "method_name": "validation",
+            "total_cases": 1000,
+            "false_accusation_rate": 0.0,
+            "malicious_detection_rate": 0.39520958083832336,
+            "coverage": 0.441,
+            "abstention_rate": 0.559,
+            "precision_malicious": 1.0,
+            "macro_f1": 1.0,
+            "confusion_counts": {
+              "benign": {
+                "true_benign": 501,
+                "false_positive": 0,
+                "true_negative": 309
+              },
+              "malicious": {
+                "true_malicious": 334,
+                "true_positive": 132,
+                "false_negative": 0
+              }
+            },
+            "abstention_by_class": {
+              "malicious_blackhole": 35,
+              "honest_normal": 19,
+              "honest_link_degradation": 167,
+              "malicious_selective_forwarding": 167,
+              "uncertain_needs_more_evidence": 165,
+              "honest_congestion_full_queue": 6
+            }
+          }
+        },
+        {
+          "threshold": 0.925,
+          "metrics": {
+            "method_name": "validation",
+            "total_cases": 1000,
+            "false_accusation_rate": 0.0,
+            "malicious_detection_rate": 0.36227544910179643,
+            "coverage": 0.417,
+            "abstention_rate": 0.583,
+            "precision_malicious": 1.0,
+            "macro_f1": 1.0,
+            "confusion_counts": {
+              "benign": {
+                "true_benign": 501,
+                "false_positive": 0,
+                "true_negative": 296
+              },
+              "malicious": {
+                "true_malicious": 334,
+                "true_positive": 121,
+                "false_negative": 0
+              }
+            },
+            "abstention_by_class": {
+              "malicious_blackhole": 46,
+              "honest_normal": 28,
+              "honest_link_degradation": 167,
+              "malicious_selective_forwarding": 167,
+              "uncertain_needs_more_evidence": 165,
+              "honest_congestion_full_queue": 10
+            }
+          }
+        },
+        {
+          "threshold": 0.95,
+          "metrics": {
+            "method_name": "validation",
+            "total_cases": 1000,
+            "false_accusation_rate": 0.0,
+            "malicious_detection_rate": 0.3083832335329341,
+            "coverage": 0.376,
+            "abstention_rate": 0.624,
+            "precision_malicious": 1.0,
+            "macro_f1": 1.0,
+            "confusion_counts": {
+              "benign": {
+                "true_benign": 501,
+                "false_positive": 0,
+                "true_negative": 273
+              },
+              "malicious": {
+                "true_malicious": 334,
+                "true_positive": 103,
+                "false_negative": 0
+              }
+            },
+            "abstention_by_class": {
+              "honest_normal": 45,
+              "malicious_blackhole": 64,
+              "honest_link_degradation": 167,
+              "malicious_selective_forwarding": 167,
+              "uncertain_needs_more_evidence": 165,
+              "honest_congestion_full_queue": 16
+            }
+          }
+        }
+      ]
+    },
+    "logistic_regression": {
+      "artifact": "artifacts/ml/logistic_regression.joblib",
+      "confidence_threshold": 0.6,
+      "validation_metrics": {
+        "method_name": "validation",
+        "total_cases": 1000,
+        "false_accusation_rate": 0.017964071856287425,
+        "malicious_detection_rate": 0.7275449101796407,
+        "coverage": 0.717,
+        "abstention_rate": 0.283,
+        "precision_malicious": 0.9642857142857143,
+        "macro_f1": 0.9610872934176442,
+        "confusion_counts": {
+          "benign": {
+            "true_benign": 501,
+            "false_positive": 9,
+            "true_negative": 420
+          },
+          "malicious": {
+            "true_malicious": 334,
+            "true_positive": 243,
+            "false_negative": 16
+          }
+        },
+        "abstention_by_class": {
+          "honest_link_degradation": 71,
+          "malicious_selective_forwarding": 74,
+          "uncertain_needs_more_evidence": 136,
+          "honest_normal": 1,
+          "malicious_blackhole": 1
+        }
+      },
+      "test_metrics": {
+        "method_name": "logistic_regression",
+        "total_cases": 1000,
+        "false_accusation_rate": 0.03006012024048096,
+        "malicious_detection_rate": 0.7590361445783133,
+        "coverage": 0.726,
+        "abstention_rate": 0.274,
+        "precision_malicious": 0.9438202247191011,
+        "macro_f1": 0.9618861535024216,
+        "confusion_counts": {
+          "benign": {
+            "true_benign": 499,
+            "false_positive": 15,
+            "true_negative": 419
+          },
+          "malicious": {
+            "true_malicious": 332,
+            "true_positive": 252,
+            "false_negative": 10
+          }
+        },
+        "abstention_by_class": {
+          "malicious_selective_forwarding": 69,
+          "honest_link_degradation": 65,
+          "uncertain_needs_more_evidence": 139,
+          "malicious_blackhole": 1
+        }
+      },
+      "threshold_candidates": [
+        {
+          "threshold": 0.5,
+          "metrics": {
+            "method_name": "validation",
+            "total_cases": 1000,
+            "false_accusation_rate": 0.03792415169660679,
+            "malicious_detection_rate": 0.7964071856287425,
+            "coverage": 0.788,
+            "abstention_rate": 0.212,
+            "precision_malicious": 0.9333333333333333,
+            "macro_f1": 0.9380474562035037,
+            "confusion_counts": {
+              "benign": {
+                "true_benign": 501,
+                "false_positive": 19,
+                "true_negative": 441
+              },
+              "malicious": {
+                "true_malicious": 334,
+                "true_positive": 266,
+                "false_negative": 25
+              }
+            },
+            "abstention_by_class": {
+              "malicious_selective_forwarding": 42,
+              "uncertain_needs_more_evidence": 128,
+              "honest_link_degradation": 41,
+              "malicious_blackhole": 1
+            }
+          }
+        },
+        {
+          "threshold": 0.525,
+          "metrics": {
+            "method_name": "validation",
+            "total_cases": 1000,
+            "false_accusation_rate": 0.03592814371257485,
+            "malicious_detection_rate": 0.7844311377245509,
+            "coverage": 0.777,
+            "abstention_rate": 0.223,
+            "precision_malicious": 0.9357142857142857,
+            "macro_f1": 0.9427525147174709,
+            "confusion_counts": {
+              "benign": {
+                "true_benign": 501,
+                "false_positive": 18,
+                "true_negative": 439
+              },
+              "malicious": {
+                "true_malicious": 334,
+                "true_positive": 262,
+                "false_negative": 22
+              }
+            },
+            "abstention_by_class": {
+              "honest_link_degradation": 44,
+              "malicious_selective_forwarding": 49,
+              "uncertain_needs_more_evidence": 129,
+              "malicious_blackhole": 1
+            }
+          }
+        },
+        {
+          "threshold": 0.55,
+          "metrics": {
+            "method_name": "validation",
+            "total_cases": 1000,
+            "false_accusation_rate": 0.029940119760479042,
+            "malicious_detection_rate": 0.7634730538922155,
+            "coverage": 0.758,
+            "abstention_rate": 0.242,
+            "precision_malicious": 0.9444444444444444,
+            "macro_f1": 0.947032967032967,
+            "confusion_counts": {
+              "benign": {
+                "true_benign": 501,
+                "false_positive": 15,
+                "true_negative": 432
+              },
+              "malicious": {
+                "true_malicious": 334,
+                "true_positive": 255,
+                "false_negative": 21
+              }
+            },
+            "abstention_by_class": {
+              "honest_link_degradation": 53,
+              "malicious_selective_forwarding": 57,
+              "uncertain_needs_more_evidence": 130,
+              "honest_normal": 1,
+              "malicious_blackhole": 1
+            }
+          }
+        },
+        {
+          "threshold": 0.575,
+          "metrics": {
+            "method_name": "validation",
+            "total_cases": 1000,
+            "false_accusation_rate": 0.029940119760479042,
+            "malicious_detection_rate": 0.7455089820359282,
+            "coverage": 0.743,
+            "abstention_rate": 0.257,
+            "precision_malicious": 0.9431818181818182,
+            "macro_f1": 0.9489439891864493,
+            "confusion_counts": {
+              "benign": {
+                "true_benign": 501,
+                "false_positive": 15,
+                "true_negative": 428
+              },
+              "malicious": {
+                "true_malicious": 334,
+                "true_positive": 249,
+                "false_negative": 19
+              }
+            },
+            "abstention_by_class": {
+              "honest_link_degradation": 57,
+              "malicious_selective_forwarding": 65,
+              "uncertain_needs_more_evidence": 133,
+              "honest_normal": 1,
+              "malicious_blackhole": 1
+            }
+          }
+        },
+        {
+          "threshold": 0.6,
+          "metrics": {
+            "method_name": "validation",
+            "total_cases": 1000,
+            "false_accusation_rate": 0.017964071856287425,
+            "malicious_detection_rate": 0.7275449101796407,
+            "coverage": 0.717,
+            "abstention_rate": 0.283,
+            "precision_malicious": 0.9642857142857143,
+            "macro_f1": 0.9610872934176442,
+            "confusion_counts": {
+              "benign": {
+                "true_benign": 501,
+                "false_positive": 9,
+                "true_negative": 420
+              },
+              "malicious": {
+                "true_malicious": 334,
+                "true_positive": 243,
+                "false_negative": 16
+              }
+            },
+            "abstention_by_class": {
+              "honest_link_degradation": 71,
+              "malicious_selective_forwarding": 74,
+              "uncertain_needs_more_evidence": 136,
+              "honest_normal": 1,
+              "malicious_blackhole": 1
+            }
+          }
+        },
+        {
+          "threshold": 0.625,
+          "metrics": {
+            "method_name": "validation",
+            "total_cases": 1000,
+            "false_accusation_rate": 0.013972055888223553,
+            "malicious_detection_rate": 0.7155688622754491,
+            "coverage": 0.697,
+            "abstention_rate": 0.303,
+            "precision_malicious": 0.9715447154471545,
+            "macro_f1": 0.9650588235294117,
+            "confusion_counts": {
+              "benign": {
+                "true_benign": 501,
+                "false_positive": 7,
+                "true_negative": 414
+              },
+              "malicious": {
+                "true_malicious": 334,
+                "true_positive": 239,
+                "false_negative": 15
+              }
+            },
+            "abstention_by_class": {
+              "honest_link_degradation": 79,
+              "malicious_selective_forwarding": 79,
+              "uncertain_needs_more_evidence": 143,
+              "honest_normal": 1,
+              "malicious_blackhole": 1
+            }
+          }
+        },
+        {
+          "threshold": 0.65,
+          "metrics": {
+            "method_name": "validation",
+            "total_cases": 1000,
+            "false_accusation_rate": 0.011976047904191617,
+            "malicious_detection_rate": 0.6796407185628742,
+            "coverage": 0.677,
+            "abstention_rate": 0.323,
+            "precision_malicious": 0.9742489270386266,
+            "macro_f1": 0.9670264690259278,
+            "confusion_counts": {
+              "benign": {
+                "true_benign": 501,
+                "false_positive": 6,
+                "true_negative": 411
+              },
+              "malicious": {
+                "true_malicious": 334,
+                "true_positive": 227,
+                "false_negative": 14
+              }
+            },
+            "abstention_by_class": {
+              "honest_link_degradation": 83,
+              "malicious_selective_forwarding": 92,
+              "uncertain_needs_more_evidence": 146,
+              "honest_normal": 1,
+              "malicious_blackhole": 1
+            }
+          }
+        },
+        {
+          "threshold": 0.675,
+          "metrics": {
+            "method_name": "validation",
+            "total_cases": 1000,
+            "false_accusation_rate": 0.00998003992015968,
+            "malicious_detection_rate": 0.6616766467065869,
+            "coverage": 0.662,
+            "abstention_rate": 0.338,
+            "precision_malicious": 0.9778761061946902,
+            "macro_f1": 0.9728709153429108,
+            "confusion_counts": {
+              "benign": {
+                "true_benign": 501,
+                "false_positive": 5,
+                "true_negative": 406
+              },
+              "malicious": {
+                "true_malicious": 334,
+                "true_positive": 221,
+                "false_negative": 11
+              }
+            },
+            "abstention_by_class": {
+              "honest_link_degradation": 88,
+              "malicious_selective_forwarding": 100,
+              "uncertain_needs_more_evidence": 146,
+              "honest_normal": 2,
+              "malicious_blackhole": 2
+            }
+          }
+        },
+        {
+          "threshold": 0.7,
+          "metrics": {
+            "method_name": "validation",
+            "total_cases": 1000,
+            "false_accusation_rate": 0.007984031936127744,
+            "malicious_detection_rate": 0.6287425149700598,
+            "coverage": 0.637,
+            "abstention_rate": 0.363,
+            "precision_malicious": 0.9813084112149533,
+            "macro_f1": 0.9804404624310612,
+            "confusion_counts": {
+              "benign": {
+                "true_benign": 501,
+                "false_positive": 4,
+                "true_negative": 399
+              },
+              "malicious": {
+                "true_malicious": 334,
+                "true_positive": 210,
+                "false_negative": 7
+              }
+            },
+            "abstention_by_class": {
+              "honest_link_degradation": 96,
+              "malicious_selective_forwarding": 114,
+              "uncertain_needs_more_evidence": 148,
+              "honest_normal": 2,
+              "malicious_blackhole": 3
+            }
+          }
+        },
+        {
+          "threshold": 0.725,
+          "metrics": {
+            "method_name": "validation",
+            "total_cases": 1000,
+            "false_accusation_rate": 0.007984031936127744,
+            "malicious_detection_rate": 0.6167664670658682,
+            "coverage": 0.623,
+            "abstention_rate": 0.377,
+            "precision_malicious": 0.9809523809523809,
+            "macro_f1": 0.9818544295486289,
+            "confusion_counts": {
+              "benign": {
+                "true_benign": 501,
+                "false_positive": 4,
+                "true_negative": 392
+              },
+              "malicious": {
+                "true_malicious": 334,
+                "true_positive": 206,
+                "false_negative": 6
+              }
+            },
+            "abstention_by_class": {
+              "honest_link_degradation": 103,
+              "malicious_selective_forwarding": 119,
+              "uncertain_needs_more_evidence": 150,
+              "honest_normal": 2,
+              "malicious_blackhole": 3
+            }
+          }
+        },
+        {
+          "threshold": 0.75,
+          "metrics": {
+            "method_name": "validation",
+            "total_cases": 1000,
+            "false_accusation_rate": 0.005988023952095809,
+            "malicious_detection_rate": 0.5958083832335329,
+            "coverage": 0.612,
+            "abstention_rate": 0.388,
+            "precision_malicious": 0.9851485148514851,
+            "macro_f1": 0.985084492111991,
+            "confusion_counts": {
+              "benign": {
+                "true_benign": 501,
+                "false_positive": 3,
+                "true_negative": 391
+              },
+              "malicious": {
+                "true_malicious": 334,
+                "true_positive": 199,
+                "false_negative": 5
+              }
+            },
+            "abstention_by_class": {
+              "honest_link_degradation": 105,
+              "malicious_selective_forwarding": 127,
+              "uncertain_needs_more_evidence": 151,
+              "honest_normal": 2,
+              "malicious_blackhole": 3
+            }
+          }
+        },
+        {
+          "threshold": 0.775,
+          "metrics": {
+            "method_name": "validation",
+            "total_cases": 1000,
+            "false_accusation_rate": 0.005988023952095809,
+            "malicious_detection_rate": 0.5898203592814372,
+            "coverage": 0.603,
+            "abstention_rate": 0.397,
+            "precision_malicious": 0.985,
+            "macro_f1": 0.986778880782639,
+            "confusion_counts": {
+              "benign": {
+                "true_benign": 501,
+                "false_positive": 3,
+                "true_negative": 386
+              },
+              "malicious": {
+                "true_malicious": 334,
+                "true_positive": 197,
+                "false_negative": 4
+              }
+            },
+            "abstention_by_class": {
+              "honest_link_degradation": 110,
+              "malicious_selective_forwarding": 130,
+              "uncertain_needs_more_evidence": 152,
+              "honest_normal": 2,
+              "malicious_blackhole": 3
+            }
+          }
+        },
+        {
+          "threshold": 0.8,
+          "metrics": {
+            "method_name": "validation",
+            "total_cases": 1000,
+            "false_accusation_rate": 0.005988023952095809,
+            "malicious_detection_rate": 0.5808383233532934,
+            "coverage": 0.592,
+            "abstention_rate": 0.408,
+            "precision_malicious": 0.9847715736040609,
+            "macro_f1": 0.9865760071295364,
+            "confusion_counts": {
+              "benign": {
+                "true_benign": 501,
+                "false_positive": 3,
+                "true_negative": 380
+              },
+              "malicious": {
+                "true_malicious": 334,
+                "true_positive": 194,
+                "false_negative": 4
+              }
+            },
+            "abstention_by_class": {
+              "honest_link_degradation": 116,
+              "malicious_selective_forwarding": 132,
+              "uncertain_needs_more_evidence": 154,
+              "malicious_blackhole": 4,
+              "honest_normal": 2
+            }
+          }
+        },
+        {
+          "threshold": 0.825,
+          "metrics": {
+            "method_name": "validation",
+            "total_cases": 1000,
+            "false_accusation_rate": 0.003992015968063872,
+            "malicious_detection_rate": 0.5658682634730539,
+            "coverage": 0.573,
+            "abstention_rate": 0.427,
+            "precision_malicious": 0.9895287958115183,
+            "macro_f1": 0.9881660522788203,
+            "confusion_counts": {
+              "benign": {
+                "true_benign": 501,
+                "false_positive": 2,
+                "true_negative": 370
+              },
+              "malicious": {
+                "true_malicious": 334,
+                "true_positive": 189,
+                "false_negative": 4
+              }
+            },
+            "abstention_by_class": {
+              "honest_link_degradation": 126,
+              "malicious_selective_forwarding": 135,
+              "uncertain_needs_more_evidence": 157,
+              "malicious_blackhole": 6,
+              "honest_normal": 3
+            }
+          }
+        },
+        {
+          "threshold": 0.85,
+          "metrics": {
+            "method_name": "validation",
+            "total_cases": 1000,
+            "false_accusation_rate": 0.001996007984031936,
+            "malicious_detection_rate": 0.5389221556886228,
+            "coverage": 0.559,
+            "abstention_rate": 0.441,
+            "precision_malicious": 0.994475138121547,
+            "macro_f1": 0.9897677349991658,
+            "confusion_counts": {
+              "benign": {
+                "true_benign": 501,
+                "false_positive": 1,
+                "true_negative": 367
+              },
+              "malicious": {
+                "true_malicious": 334,
+                "true_positive": 180,
+                "false_negative": 4
+              }
+            },
+            "abstention_by_class": {
+              "honest_link_degradation": 130,
+              "malicious_selective_forwarding": 142,
+              "uncertain_needs_more_evidence": 158,
+              "malicious_blackhole": 8,
+              "honest_normal": 3
+            }
+          }
+        },
+        {
+          "threshold": 0.875,
+          "metrics": {
+            "method_name": "validation",
+            "total_cases": 1000,
+            "false_accusation_rate": 0.001996007984031936,
+            "malicious_detection_rate": 0.5209580838323353,
+            "coverage": 0.544,
+            "abstention_rate": 0.456,
+            "precision_malicious": 0.9942857142857143,
+            "macro_f1": 0.9936575302092544,
+            "confusion_counts": {
+              "benign": {
+                "true_benign": 501,
+                "false_positive": 1,
+                "true_negative": 361
+              },
+              "malicious": {
+                "true_malicious": 334,
+                "true_positive": 174,
+                "false_negative": 2
+              }
+            },
+            "abstention_by_class": {
+              "honest_link_degradation": 136,
+              "malicious_selective_forwarding": 149,
+              "uncertain_needs_more_evidence": 159,
+              "malicious_blackhole": 9,
+              "honest_normal": 3
+            }
+          }
+        },
+        {
+          "threshold": 0.9,
+          "metrics": {
+            "method_name": "validation",
+            "total_cases": 1000,
+            "false_accusation_rate": 0.001996007984031936,
+            "malicious_detection_rate": 0.4880239520958084,
+            "coverage": 0.521,
+            "abstention_rate": 0.479,
+            "precision_malicious": 0.9939024390243902,
+            "macro_f1": 0.9955307649667406,
+            "confusion_counts": {
+              "benign": {
+                "true_benign": 501,
+                "false_positive": 1,
+                "true_negative": 351
+              },
+              "malicious": {
+                "true_malicious": 334,
+                "true_positive": 163,
+                "false_negative": 1
+              }
+            },
+            "abstention_by_class": {
+              "honest_link_degradation": 145,
+              "malicious_selective_forwarding": 158,
+              "uncertain_needs_more_evidence": 160,
+              "malicious_blackhole": 12,
+              "honest_normal": 4
+            }
+          }
+        },
+        {
+          "threshold": 0.925,
+          "metrics": {
+            "method_name": "validation",
+            "total_cases": 1000,
+            "false_accusation_rate": 0.0,
+            "malicious_detection_rate": 0.46107784431137727,
+            "coverage": 0.502,
+            "abstention_rate": 0.498,
+            "precision_malicious": 1.0,
+            "macro_f1": 0.997654074984808,
+            "confusion_counts": {
+              "benign": {
+                "true_benign": 501,
+                "false_positive": 0,
+                "true_negative": 343
+              },
+              "malicious": {
+                "true_malicious": 334,
+                "true_positive": 154,
+                "false_negative": 1
+              }
+            },
+            "abstention_by_class": {
+              "honest_link_degradation": 152,
+              "malicious_selective_forwarding": 162,
+              "uncertain_needs_more_evidence": 161,
+              "malicious_blackhole": 17,
+              "honest_normal": 6
+            }
+          }
+        },
+        {
+          "threshold": 0.95,
+          "metrics": {
+            "method_name": "validation",
+            "total_cases": 1000,
+            "false_accusation_rate": 0.0,
+            "malicious_detection_rate": 0.437125748502994,
+            "coverage": 0.486,
+            "abstention_rate": 0.514,
+            "precision_malicious": 1.0,
+            "macro_f1": 0.9975505733078417,
+            "confusion_counts": {
+              "benign": {
+                "true_benign": 501,
+                "false_positive": 0,
+                "true_negative": 336
+              },
+              "malicious": {
+                "true_malicious": 334,
+                "true_positive": 146,
+                "false_negative": 1
+              }
+            },
+            "abstention_by_class": {
+              "malicious_blackhole": 22,
+              "honest_link_degradation": 156,
+              "malicious_selective_forwarding": 165,
+              "uncertain_needs_more_evidence": 162,
+              "honest_normal": 9
+            }
+          }
+        }
+      ]
+    }
+  }
+}

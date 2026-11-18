@@ -49,6 +49,7 @@ class EvidenceAdapter:
         self.dataset_dir = dataset_dir
         self.cases: dict[str, Case] = {}
         self.records: list[EvidenceRecord] = []
+        self._records_by_case_source: dict[tuple[str, str], list[EvidenceRecord]] = {}
         self._record_counter = 0
         self._loaded_files: list[str] = []
 
@@ -219,6 +220,7 @@ class EvidenceAdapter:
             payload=payload,
         )
         self.records.append(record)
+        self._records_by_case_source.setdefault((case_id, source), []).append(record)
 
     # ------------------------------------------------------------------ #
     # Query API (read-only tools for agents)
@@ -249,18 +251,17 @@ class EvidenceAdapter:
 
     def _records_for(self, case_id: str, source: str) -> list[dict[str, Any]]:
         out: list[dict[str, Any]] = []
-        for r in self.records:
-            if r.case_id == case_id and r.source == source:
-                out.append(
-                    {
-                        "record_id": r.record_id,
-                        "case_id": r.case_id,
-                        "monitored_node": r.monitored_node,
-                        "timestamp_s": r.timestamp_s,
-                        "source": r.source,
-                        **r.payload,
-                    }
-                )
+        for r in self._records_by_case_source.get((case_id, source), []):
+            out.append(
+                {
+                    "record_id": r.record_id,
+                    "case_id": r.case_id,
+                    "monitored_node": r.monitored_node,
+                    "timestamp_s": r.timestamp_s,
+                    "source": r.source,
+                    **r.payload,
+                }
+            )
         return out
 
     def get_evidence_index(self) -> dict[str, list[dict[str, Any]]]:

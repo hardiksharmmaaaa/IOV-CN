@@ -1,0 +1,156 @@
+{
+  "config": {
+    "split": "easy_test_sft.jsonl",
+    "cases": 500,
+    "model_path": "artifacts/ml/random_forest.joblib",
+    "logistic_model_path": "artifacts/ml/logistic_regression.joblib"
+  },
+  "methods": {
+    "loss_only": {
+      "method_name": "loss_only",
+      "total_cases": 500,
+      "false_accusation_rate": 0.484,
+      "malicious_detection_rate": 0.9588235294117647,
+      "coverage": 1.0,
+      "abstention_rate": 0.0,
+      "precision_malicious": 0.573943661971831,
+      "macro_f1": 0.693227728196115,
+      "confusion_counts": {
+        "benign": {
+          "true_benign": 250,
+          "false_positive": 121,
+          "true_negative": 129
+        },
+        "malicious": {
+          "true_malicious": 170,
+          "true_positive": 163,
+          "false_negative": 7
+        }
+      },
+      "abstention_by_class": {}
+    },
+    "single_agent": {
+      "method_name": "single_agent",
+      "total_cases": 500,
+      "false_accusation_rate": 0.056,
+      "malicious_detection_rate": 0.7647058823529411,
+      "coverage": 0.79,
+      "abstention_rate": 0.21,
+      "precision_malicious": 0.9027777777777778,
+      "macro_f1": 0.8710914218106447,
+      "confusion_counts": {
+        "benign": {
+          "true_benign": 250,
+          "false_positive": 14,
+          "true_negative": 164
+        },
+        "malicious": {
+          "true_malicious": 170,
+          "true_positive": 130,
+          "false_negative": 29
+        }
+      },
+      "abstention_by_class": {
+        "honest_link_degradation": 45,
+        "malicious_selective_forwarding": 11,
+        "honest_congestion_full_queue": 27,
+        "uncertain_needs_more_evidence": 22
+      }
+    },
+    "rules": {
+      "method_name": "rules",
+      "total_cases": 500,
+      "false_accusation_rate": 0.028,
+      "malicious_detection_rate": 0.6588235294117647,
+      "coverage": 0.432,
+      "abstention_rate": 0.568,
+      "precision_malicious": 0.9411764705882353,
+      "macro_f1": 0.8779042569780134,
+      "confusion_counts": {
+        "benign": {
+          "true_benign": 250,
+          "false_positive": 7,
+          "true_negative": 44
+        },
+        "malicious": {
+          "true_malicious": 170,
+          "true_positive": 112,
+          "false_negative": 11
+        }
+      },
+      "abstention_by_class": {
+        "honest_link_degradation": 53,
+        "honest_normal": 85,
+        "honest_congestion_full_queue": 61,
+        "malicious_selective_forwarding": 38,
+        "uncertain_needs_more_evidence": 38,
+        "malicious_blackhole": 9
+      }
+    },
+    "hybrid_random_forest": {
+      "method_name": "hybrid_random_forest",
+      "total_cases": 500,
+      "false_accusation_rate": 0.024,
+      "malicious_detection_rate": 0.6529411764705882,
+      "coverage": 0.774,
+      "abstention_rate": 0.226,
+      "precision_malicious": 0.9487179487179487,
+      "macro_f1": 0.9428493449781659,
+      "confusion_counts": {
+        "benign": {
+          "true_benign": 250,
+          "false_positive": 6,
+          "true_negative": 220
+        },
+        "malicious": {
+          "true_malicious": 170,
+          "true_positive": 111,
+          "false_negative": 12
+        }
+      },
+      "abstention_by_class": {
+        "malicious_selective_forwarding": 38,
+        "honest_link_degradation": 23,
+        "uncertain_needs_more_evidence": 42,
+        "malicious_blackhole": 9,
+        "honest_congestion_full_queue": 1
+      }
+    },
+    "hybrid_logistic_regression": {
+      "method_name": "hybrid_logistic_regression",
+      "total_cases": 500,
+      "false_accusation_rate": 0.02,
+      "malicious_detection_rate": 0.6176470588235294,
+      "coverage": 0.774,
+      "abstention_rate": 0.226,
+      "precision_malicious": 0.9545454545454546,
+      "macro_f1": 0.9319648093841642,
+      "confusion_counts": {
+        "benign": {
+          "true_benign": 250,
+          "false_positive": 5,
+          "true_negative": 222
+        },
+        "malicious": {
+          "true_malicious": 170,
+          "true_positive": 105,
+          "false_negative": 16
+        }
+      },
+      "abstention_by_class": {
+        "honest_link_degradation": 22,
+        "malicious_selective_forwarding": 40,
+        "uncertain_needs_more_evidence": 41,
+        "malicious_blackhole": 9,
+        "honest_congestion_full_queue": 1
+      }
+    }
+  },
+  "elapsed_seconds": {
+    "loss_only": 0.001488042005803436,
+    "single_agent": 0.003205791988875717,
+    "rules": 0.22972491700784303,
+    "hybrid_random_forest": 49.294354250014294,
+    "hybrid_logistic_regression": 0.8151927920116577
+  }
+}

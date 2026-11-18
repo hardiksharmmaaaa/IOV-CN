@@ -17,7 +17,7 @@ from typing import Any
 
 from flask import Flask, jsonify, request, send_from_directory
 
-from agents import CongestionAgent, ForwardingPatternAgent, WirelessMobilityAgent
+from agents import CongestionAgent, ForwardingPatternAgent, MLAgent, WirelessMobilityAgent
 from baselines import LossOnlyRule, SingleAgentBaseline
 from controller import Coordinator
 from data import EvidenceAdapter
@@ -26,6 +26,7 @@ from data import EvidenceAdapter
 BASE_DIR = Path(__file__).resolve().parent
 STATIC_DIR = BASE_DIR / "static"
 DATASET_DIR = BASE_DIR / "Monitoring-Dataset"
+DEFAULT_ML_MODEL = BASE_DIR / "artifacts" / "ml" / "random_forest.joblib"
 
 # Disable Flask's implicit static route so it cannot shadow `/api/*` routes.
 # The catch-all frontend route below serves the dashboard and its assets.
@@ -130,10 +131,13 @@ def diagnose():
             "wireless_mobility_agent": WirelessMobilityAgent(),
             "forwarding_pattern_agent": ForwardingPatternAgent(),
         }
+        ml_model_path = Path(os.getenv("IOV_ML_MODEL", str(DEFAULT_ML_MODEL)))
+        ml_agent = MLAgent(str(ml_model_path)) if ml_model_path.exists() else None
         coordinator = Coordinator(
             agents=agents,
             evidence_tools=evidence_tools,
             evidence_index=current_adapter.get_evidence_index(),
+            ml_agent=ml_agent,
         )
         result = coordinator.diagnose(
             case_id=case.case_id,

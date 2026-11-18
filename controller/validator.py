@@ -20,6 +20,11 @@ class EvidenceValidator:
     def __init__(self, evidence_index: dict[str, list[dict[str, Any]]] | None = None):
         self.evidence_index = evidence_index or {}
         self.repair_used: dict[str, bool] = {}
+        self._records_by_case_and_id = {
+            (record.get("case_id"), record.get("record_id")): record
+            for records in self.evidence_index.values()
+            for record in records
+        }
 
     def validate_finding(
         self,
@@ -102,11 +107,7 @@ class EvidenceValidator:
     def _record_exists_and_belongs(
         self, case_id: str, record_id: str
     ) -> bool:
-        for records in self.evidence_index.values():
-            for record in records:
-                if record.get("record_id") == record_id and record.get("case_id") == case_id:
-                    return True
-        return False
+        return (case_id, record_id) in self._records_by_case_and_id
 
     def _check_numeric_claims(
         self, case_id: str, finding: dict[str, Any]
@@ -119,10 +120,10 @@ class EvidenceValidator:
         # whether any cited record contains a matching numeric field.
         cited_ids = finding.get("supporting_record_ids", [])
         cited_records: list[dict[str, Any]] = []
-        for records in self.evidence_index.values():
-            for record in records:
-                if record.get("record_id") in cited_ids and record.get("case_id") == case_id:
-                    cited_records.append(record)
+        for record_id in cited_ids:
+            record = self._records_by_case_and_id.get((case_id, record_id))
+            if record is not None:
+                cited_records.append(record)
 
         # If justification mentions a threshold but no cited record supports it,
         # flag as potential unsupported claim (soft warning, not hard fail).

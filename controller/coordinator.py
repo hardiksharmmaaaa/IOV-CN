@@ -32,10 +32,12 @@ class Coordinator:
         agents: dict[str, Any],
         evidence_tools: dict[str, Any],
         evidence_index: dict[str, list[dict[str, Any]]] | None = None,
+        ml_agent: Any | None = None,
     ):
         self.agents = agents
         self.evidence_tools = evidence_tools
         self.validator = EvidenceValidator(evidence_index)
+        self.ml_agent = ml_agent
 
     def diagnose(
         self,
@@ -78,6 +80,37 @@ class Coordinator:
 
         result.agent_findings = agent_findings
 
+        # The learned agent is advisory and is kept separate from the three
+        # deterministic specialists for the bounded challenge round below.
+        if self.ml_agent is not None:
+            finding = self.ml_agent.investigate(
+                case_id=case_id,
+                raw_sources=raw_sources,
+                available_tools=self.evidence_tools,
+            )
+            agent_findings[self.ml_agent.name] = {
+                "candidate_cause": finding.candidate_cause,
+                "confidence": finding.confidence,
+                "supporting_record_ids": finding.supporting_record_ids,
+                "counterevidence_ids": finding.counterevidence_ids,
+                "missing_fields": finding.missing_fields,
+                "justification": finding.justification,
+                "tool_calls_used": finding.tool_calls_used,
+                "model_name": finding.model_name,
+                "predicted_label": finding.predicted_label,
+                "probability": finding.probability,
+                "probabilities": finding.probabilities,
+                "top_features": finding.top_features,
+            }
+            result.trace.append(
+                {
+                    "stage": "ml_investigation",
+                    "agent": self.ml_agent.name,
+                    "finding": agent_findings[self.ml_agent.name],
+                }
+            )
+            result.agent_findings = agent_findings
+
         # Stage 2: Validate all findings
         validation_passed = True
         for agent_name, finding_dict in agent_findings.items():
@@ -112,6 +145,7 @@ class Coordinator:
         candidate_causes = {
             name: f["candidate_cause"]
             for name, f in agent_findings.items()
+            if name != "ml_agent"
         }
         unique_causes = set(candidate_causes.values())
 
@@ -172,9 +206,7 @@ class Coordinator:
         result.challenge_rounds = challenge_rounds
 
         # Stage 4: Apply coordinator decision rules
-        decision = self._apply_decision_rules(
-            case_id, agent_findings, raw_sources
-        )
+        decision = self._apply_decision_rules(case_id, agent_findings, raw_sources)
         result.decision = decision
 
         return result
@@ -234,6 +266,26 @@ class Coordinator:
             "malicious_selective_forwarding",
         )
 
+        ml_finding = agent_findings.get("ml_agent")
+        ml_available = ml_finding is not None
+        ml_cause = ml_finding.get("candidate_cause") if ml_finding else ""
+        ml_supports_benign = ml_cause in (
+            "honest_normal",
+            "honest_congestion_full_queue",
+            "honest_link_degradation",
+        )
+        ml_supports_malicious = ml_cause in (
+            "malicious_blackhole",
+            "malicious_selective_forwarding",
+        )
+        learned_malicious = (
+            ml_supports_malicious
+            and packets_received > 10
+            and packets_forwarded < packets_received
+            and not congestion_supports_benign
+            and not wireless_supports_benign
+        )
+
         # Check for unresolved contradictions
         benign_votes = sum(
             1
@@ -251,7 +303,13 @@ class Coordinator:
         # queue/link evidence that does NOT account for failures.
         if packets_received > 0 and packets_forwarded < packets_received:
             loss_ratio = 1 - (packets_forwarded / packets_received)
-            if pattern_suggests_malicious and not congestion_supports_benign and not wireless_supports_benign:
+            malicious_evidence = pattern_suggests_malicious or learned_malicious
+            if (
+                malicious_evidence
+                and not congestion_supports_benign
+                and not wireless_supports_benign
+                and (not ml_available or ml_supports_malicious)
+            ):
                 if malicious_votes >= 1 and benign_votes == 0:
                     return Decision(
                         primary="suspected_malicious",
@@ -264,15 +322,22 @@ class Coordinator:
                     )
 
         # Rule: Supported benign requires time-aligned benign mechanism without contradiction.
-        if congestion_supports_benign or wireless_supports_benign:
-            if malicious_votes == 0:
+        if congestion_supports_benign or wireless_supports_benign or ml_supports_benign:
+            benign_specialist_agreement = (
+                (congestion_supports_benign and ml_cause == "honest_congestion_full_queue")
+                or (wireless_supports_benign and ml_cause == "honest_link_degradation")
+            )
+            if (
+                (malicious_votes == 0 and not ml_supports_malicious)
+                or benign_specialist_agreement
+            ):
                 return Decision(
                     primary="benign",
-                    secondary_cause=congestion_cause or wireless_cause,
+                    secondary_cause=congestion_cause or wireless_cause or ml_cause,
                     supporting_record_ids=self._collect_supporting(agent_findings),
                     contradictory_evidence=[],
                     missing_info=[],
-                    rule_applied="benign: time-aligned benign mechanism without contradiction",
+                    rule_applied="benign: specialist/ML benign mechanism without contradiction",
                     confidence="medium",
                 )
 
